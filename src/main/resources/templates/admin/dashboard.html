@@ -1,0 +1,330 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Admin Dashboard - Hotel Pro</title>
+
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+    />
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css"
+      rel="stylesheet"
+    />
+
+    <style>
+      :root {
+        --primary-gradient: linear-gradient(180deg, #5f2c82, #49a09d);
+        --transition-speed: 0.3s;
+      }
+
+      body {
+        background-color: #f0f2f5;
+        font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+      }
+
+      /* --- SIDEBAR --- */
+      .sidebar {
+        width: 260px;
+        min-height: 100vh;
+        background: var(--primary-gradient);
+        color: white;
+        transition: all var(--transition-speed);
+        position: sticky;
+        top: 0;
+      }
+
+      .sidebar a {
+        color: rgba(255, 255, 255, 0.8);
+        text-decoration: none;
+        display: flex;
+        align-items: center;
+        padding: 14px 20px;
+        border-radius: 12px;
+        margin-bottom: 8px;
+        transition: all var(--transition-speed);
+      }
+
+      .sidebar a:hover {
+        background-color: rgba(255, 255, 255, 0.2);
+        color: white;
+        padding-left: 30px; /* Hiệu ứng trượt khi hover */
+      }
+
+      .sidebar a.active {
+        background-color: rgba(255, 255, 255, 0.3);
+        color: white;
+        font-weight: bold;
+        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+      }
+
+      /* --- CARDS & HOVER --- */
+      .card {
+        border: none;
+        border-radius: 16px;
+        transition: all var(--transition-speed) ease;
+      }
+
+      /* Hiệu ứng bay bổng cho các thẻ Stat */
+      .stat-card:hover {
+        transform: translateY(-10px);
+        box-shadow: 0 12px 20px rgba(0, 0, 0, 0.15) !important;
+        filter: brightness(1.05);
+        cursor: pointer;
+      }
+
+      .stat-icon {
+        font-size: 2.5rem;
+        opacity: 0.7;
+      }
+
+      /* Thẻ trạng thái thay thế cho Progress Bar */
+      .sos-card {
+        padding: 20px;
+        text-align: center;
+        border-radius: 12px;
+        border: 1px solid rgba(0, 0, 0, 0.05);
+        background: #fff;
+        transition: transform 0.2s;
+      }
+
+      .sos-card:hover {
+        transform: scale(1.05);
+        border-color: #49a09d;
+      }
+
+      /* Colors */
+      .bg-purple {
+        background: #6f42c1;
+      }
+      .bg-green {
+        background: #20c997;
+      }
+      .bg-orange {
+        background: #fd7e14;
+      }
+      .bg-red {
+        background: #dc3545;
+      }
+
+      .tx {
+        width: 46px;
+        height: 30px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
+
+      /* --- FOOTER --- */
+      footer {
+        margin-top: 40px;
+        padding: 25px 0;
+        color: #777;
+        border-top: 1px solid #ddd;
+      }
+    </style>
+  </head>
+
+  <body>
+    <div class="d-flex">
+      <div th:insert="~{admin/layouts/sidebar}"></div>
+
+      <div class="flex-grow-1 p-4">
+        <div class="d-flex justify-content-between align-items-center mb-4">
+          <div>
+            <h3 class="fw-bold mb-0">Overview Dashboard</h3>
+            <p class="text-muted">Hệ thống quản lý khách sạn thời gian thực</p>
+          </div>
+          <div class="d-flex align-items-center">
+            <div class="text-end me-3">
+              <span class="d-block fw-bold">Admin Manager</span>
+              <small class="text-success">Online</small>
+            </div>
+            <img
+              src="https://ui-avatars.com/api/?name=Admin&background=49a09d&color=fff"
+              class="rounded-circle shadow-sm"
+              width="45"
+              alt="Avatar"
+            />
+          </div>
+        </div>
+
+        <div class="row g-4 mb-4">
+          <div class="col-md-3">
+            <div class="card stat-card bg-purple text-white p-3 shadow-sm">
+              <div class="d-flex justify-content-between">
+                <div>
+                  <h2 class="fw-bold">12</h2>
+                  <span>New Bookings</span>
+                </div>
+                <i class="bi bi-bookmark-check stat-icon"></i>
+              </div>
+            </div>
+          </div>
+
+          <div class="col-md-3">
+            <div class="card stat-card bg-green text-white p-3 shadow-sm">
+              <div class="d-flex justify-content-between">
+                <div>
+                  <h2 class="fw-bold">35</h2>
+                  <span>Available Rooms</span>
+                </div>
+                <i class="bi bi-house-check stat-icon"></i>
+              </div>
+            </div>
+          </div>
+
+          <div class="col-md-3">
+            <div class="card stat-card bg-orange text-white p-3 shadow-sm">
+              <div class="d-flex justify-content-between">
+                <div>
+                  <h2 class="fw-bold">5</h2>
+                  <span>Check In Today</span>
+                </div>
+                <i class="bi bi-box-arrow-in-right stat-icon"></i>
+              </div>
+            </div>
+          </div>
+
+          <div class="col-md-3">
+            <div class="card stat-card bg-red text-white p-3 shadow-sm">
+              <div class="d-flex justify-content-between">
+                <div>
+                  <h2 class="fw-bold">3</h2>
+                  <span>Check Out Today</span>
+                </div>
+                <i class="bi bi-box-arrow-right stat-icon"></i>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="row g-4">
+          <div class="col-md-7">
+            <div class="card shadow-sm border-0 h-100 p-3">
+              <div class="card-body">
+                <h5 class="fw-bold mb-4">Room Status Details</h5>
+
+                <div class="row g-3">
+                  <div class="col-md-4">
+                    <div class="sos-card shadow-sm">
+                      <i
+                        class="bi bi-check-circle-fill text-success fs-2 d-block mb-2"
+                      ></i>
+                      <h3 class="fw-bold">35</h3>
+                      <small class="text-muted text-uppercase fw-bold"
+                        >Available</small
+                      >
+                    </div>
+                  </div>
+                  <div class="col-md-4">
+                    <div class="sos-card shadow-sm">
+                      <i
+                        class="bi bi-person-fill-lock text-danger fs-2 d-block mb-2"
+                      ></i>
+                      <h3 class="fw-bold">20</h3>
+                      <small class="text-muted text-uppercase fw-bold"
+                        >Busy</small
+                      >
+                    </div>
+                  </div>
+                  <div class="col-md-4">
+                    <div class="sos-card shadow-sm">
+                      <i class="bi bi-tools text-warning fs-2 d-block mb-2"></i>
+                      <h3 class="fw-bold">3</h3>
+                      <small class="text-muted text-uppercase fw-bold"
+                        >Maintaining</small
+                      >
+                    </div>
+                  </div>
+                </div>
+
+                <div
+                  class="mt-4 p-3 bg-light rounded-3 d-flex align-items-center"
+                >
+                  <i class="bi bi-info-circle-fill text-primary me-3 fs-4"></i>
+                  <span
+                    >Hệ thống ghi nhận có <strong>2 phòng</strong> dự kiến sẽ
+                    dọn dẹp xong vào 14h chiều nay.</span
+                  >
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="col-md-5">
+            <div class="card shadow-sm border-0 h-100 p-3">
+              <div class="card-body">
+                <h5 class="fw-bold mb-4">Booking Status</h5>
+
+                <div class="list-group list-group-flush">
+                  <div
+                    class="list-group-item d-flex justify-content-between align-items-center border-0 mb-2 rounded-3 bg-light"
+                  >
+                    <span class="fw-semibold"
+                      ><i class="bi bi-clock-history me-2 text-warning"></i
+                      >Pending</span
+                    >
+                    <span class="badge bg-warning rounded-pill px-3 tx">4</span>
+                  </div>
+                  <div
+                    class="list-group-item d-flex justify-content-between align-items-center border-0 mb-2 rounded-3 bg-light"
+                  >
+                    <span class="fw-semibold"
+                      ><i class="bi bi-patch-check me-2 text-primary"></i
+                      >Confirmed</span
+                    >
+                    <span class="badge bg-primary rounded-pill px-3 tx">6</span>
+                  </div>
+                  <div
+                    class="list-group-item d-flex justify-content-between align-items-center border-0 mb-2 rounded-3 bg-light"
+                  >
+                    <span class="fw-semibold"
+                      ><i class="bi bi-check-all me-2 text-success"></i
+                      >Completed</span
+                    >
+                    <span class="badge bg-success rounded-pill px-3 tx">8</span>
+                  </div>
+                  <div
+                    class="list-group-item d-flex justify-content-between align-items-center border-0 rounded-3 bg-light"
+                  >
+                    <span class="fw-semibold"
+                      ><i class="bi bi-x-circle me-2 text-danger"></i
+                      >Cancelled</span
+                    >
+                    <span class="badge bg-danger rounded-pill px-3 tx">1</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <footer class="text-center">
+          <div class="mb-2">
+            <a href="#" class="text-muted text-decoration-none mx-2 small"
+              >Quy định chung</a
+            >
+            <a href="#" class="text-muted text-decoration-none mx-2 small"
+              >Hướng dẫn sử dụng</a
+            >
+            <a href="#" class="text-muted text-decoration-none mx-2 small"
+              >Hỗ trợ kỹ thuật</a
+            >
+          </div>
+          <p class="mb-0 small">
+            &copy; 2026 <strong>Hotel Pro Management</strong>. Thiết kế bởi
+            Admin Team.
+          </p>
+          <p class="text-muted small" style="font-size: 0.75rem">
+            Phiên bản v2.4.0 - Cập nhật lần cuối: Hôm nay, 15:30
+          </p>
+        </footer>
+      </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+  </body>
+</html>
