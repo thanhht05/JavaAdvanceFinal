@@ -1,0 +1,92 @@
+<aside>
+  <div class="filter-sidebar shadow-sm">
+    <h5 class="filter-title"><i class="fas fa-sliders-h me-2"></i>Bộ lọc</h5>
+
+    <form th:action="@{/}" method="get">
+      <div class="mb-4">
+        <label class="form-label fw-600">Khoảng giá (VNĐ)</label>
+        <input
+          type="range"
+          class="form-range"
+          min="0"
+          max="10000000"
+          step="500000"
+          id="priceRange"
+        />
+        <div class="d-flex justify-content-between mt-2 small text-muted">
+          <span>0đ</span>
+          <span id="priceValue">5.000.000đ</span>
+        </div>
+      </div>
+
+      <div class="mb-4">
+        <label class="form-label fw-600 d-block">Loại phòng</label>
+        <div class="form-check mb-2">
+          <input
+            class="form-check-input"
+            type="checkbox"
+            value="Standard"
+            id="type1"
+          />
+          <label class="form-check-label" for="type1"
+            >Standard (Phòng đơn)</label
+          >
+        </div>
+        <div class="form-check mb-2">
+          <input
+            class="form-check-input"
+            type="checkbox"
+            value="Deluxe"
+            id="type2"
+          />
+          <label class="form-check-label" for="type2">Deluxe (Phòng đôi)</label>
+        </div>
+        <div class="form-check mb-2">
+          <input
+            class="form-check-input"
+            type="checkbox"
+            value="Suite"
+            id="type3"
+          />
+          <label class="form-check-label" for="type3">Suite (Hạng sang)</label>
+        </div>
+      </div>
+
+      <div class="mb-4">
+        <label class="form-label fw-600 d-block">Số người</label>
+        <div class="form-check mb-2">
+          <input
+            class="form-check-input"
+            type="radio"
+            name="people"
+            value="1"
+            id="p1"
+          />
+          <label class="form-check-label" for="p1">1 Người</label>
+        </div>
+        <div class="form-check mb-2">
+          <input
+            class="form-check-input"
+            type="radio"
+            name="people"
+            value="2"
+            id="p2"
+          />
+          <label class="form-check-label" for="p2">2 Người</label>
+        </div>
+        <div class="form-check mb-2">
+          <input
+            class="form-check-input"
+            type="radio"
+            name="people"
+            value="4"
+            id="p3"
+          />
+          <label class="form-check-label" for="p3">4+ Người (Gia đình)</label>
+        </div>
+      </div>
+
+      <button type="submit" class="btn btn-primary w-100">Áp dụng lọc</button>
+    </form>
+  </div>
+</aside>

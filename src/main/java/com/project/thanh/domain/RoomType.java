@@ -19,7 +19,7 @@ public class RoomType {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
-    private String name; // (1.Standard, 2.Deluxe, 3.Suite)
+    private String name; // (2.Standard, 3.Deluxe, 4.Suite)
     private double price;
     private int capacity;
 

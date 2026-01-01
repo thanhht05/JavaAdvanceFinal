@@ -1,0 +1,85 @@
+<nav class="navbar navbar-expand-lg navbar-light sticky-top py-2">
+  <div class="container">
+    <a
+      class="navbar-brand fw-bold text-primary d-flex align-items-center"
+      href="/"
+    >
+      <div class="bg-primary text-white rounded-3 p-2 me-2 d-inline-flex">
+        <i class="fas fa-paper-plane fs-5"></i>
+      </div>
+      <span>LuxStay</span>
+    </a>
+
+    <button
+      class="navbar-toggler border-0"
+      type="button"
+      data-bs-toggle="collapse"
+      data-bs-target="#navbarNav"
+    >
+      <span class="navbar-toggler-icon"></span>
+    </button>
+
+    <div class="collapse navbar-collapse" id="navbarNav">
+      <form class="d-none d-lg-flex ms-lg-4 me-auto">
+        <div class="header-search d-flex align-items-center">
+          <i class="fas fa-search text-muted"></i>
+          <input type="text" placeholder="Tìm điểm đến, khách sạn..." />
+        </div>
+      </form>
+
+      <ul class="navbar-nav align-items-center">
+        <li class="nav-item">
+          <a class="nav-link active" href="#">Trang chủ</a>
+        </li>
+        <li class="nav-item"><a class="nav-link" href="#">Khám phá</a></li>
+        <li class="nav-item"><a class="nav-link" href="#">Chuyến đi</a></li>
+
+        <li class="nav-item mx-2 d-none d-lg-block">
+          <a class="nav-link p-0 position-relative" href="#">
+            <i class="far fa-bell fs-5"></i>
+            <span
+              class="position-absolute top-0 start-100 translate-middle badge border border-light rounded-circle bg-danger p-1"
+            >
+              <span class="visually-hidden">unread messages</span>
+            </span>
+          </a>
+        </li>
+
+        <li class="nav-item dropdown ms-lg-3">
+          <a
+            class="nav-link dropdown-toggle d-flex align-items-center p-0"
+            href="#"
+            id="userDropdown"
+            role="button"
+            data-bs-toggle="dropdown"
+          >
+            <div class="btn-user">
+              <i class="fas fa-user"></i>
+            </div>
+            <span class="ms-2 d-lg-none">Tài khoản</span>
+          </a>
+          <ul
+            class="dropdown-menu dropdown-menu-end shadow border-0 mt-3 animate slideIn"
+          >
+            <li>
+              <a class="dropdown-item" href="#"
+                ><i class="fas fa-user-circle me-2"></i>Hồ sơ của tôi</a
+              >
+            </li>
+            <li>
+              <a class="dropdown-item" href="#"
+                ><i class="fas fa-history me-2"></i>Lịch sử đặt phòng</a
+              >
+            </li>
+            <li><hr class="dropdown-divider" /></li>
+            <li>
+              <a class="dropdown-item text-danger" href="#"
+                ><i class="fas fa-sign-out-alt me-2"></i>Đăng xuất</a
+              >
+            </li>
+          </ul>
+        </li>
+      </ul>
+    </div>
+  </div>
+</nav>
