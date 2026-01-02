@@ -1,29 +1,29 @@
 package com.project.thanh.domain;
 
-import java.util.List;
+import java.util.Date;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
-import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 import lombok.Getter;
 import lombok.Setter;
 
-@Entity()
-@Table(name = "room_types")
+@Entity
+@Table(name = "vouchers")
 @Getter
 @Setter
-public class RoomType {
+public class Voucher {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
-    private String name; // (2.Standard, 3.Deluxe, 4.Suite)
-    private long price;
-    private int capacity;
 
-    @OneToMany(mappedBy = "roomType")
-    private List<Room> rooms;
+    private String code;
+    private Date startDate;
+    private Date endDate;
+    private int discountValue;
+    private int maxDiscount;
+    private int usageLimit;
 
 }

@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>LuxStay - Xác nhận đặt phòng</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet" />
+    <link rel="stylesheet" href="/css/styles.css" />
+
+    <style>
+        body {
+            font-family: "Inter", sans-serif;
+            background: #f4f7f6;
+        }
+
+        .booking-wrapper {
+            max-width: 1100px;
+            margin: 40px auto;
+        }
+
+        .main-booking-card {
+            display: grid;
+            grid-template-columns: 1fr 1.4fr;
+            gap: 30px;
+            background: #fff;
+            border-radius: 20px;
+            padding: 25px;
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.08);
+        }
+
+        /* LEFT */
+        .room-preview-banner {
+            background: #f8f9fa;
+            border-radius: 16px;
+            padding: 20px;
+        }
+
+        .room-preview-img {
+            width: 100%;
+            height: 220px;
+            object-fit: cover;
+            border-radius: 12px;
+            margin-bottom: 15px;
+        }
+
+        /* RIGHT */
+        .form-section-title {
+            font-weight: 700;
+            color: #0d6efd;
+            margin-bottom: 15px;
+        }
+
+        .form-control {
+            border-radius: 10px;
+            padding: 10px 14px;
+        }
+
+        .btn-confirm-booking {
+            background: linear-gradient(90deg, #0d6efd, #004dc7);
+            border-radius: 12px;
+            font-weight: 700;
+            padding: 14px;
+        }
+    </style>
+</head>
+
+<body>
+    <div th:insert="~{layouts/user/header}"></div>
+
+    <div class="">
+        <div class="booking-wrapper">
+            <div class="main-booking-card">
+                <!-- LEFT -->
+                <div class="room-preview-banner">
+                    <img th:src="@{'/' + ${room.img}}" class="room-preview-img" />
+
+                    <span class="badge bg-primary mb-2" th:text="${room.roomType.name}"></span>
+
+                    <h5 class="fw-bold">
+                        Phòng số <span th:text="${room.roomNumber}"></span>
+                    </h5>
+
+                    <p class="text-muted mb-1">
+                        Tầng <span th:text="${room.flor}"></span> ·
+                        <span th:text="${room.roomType.capacity}"></span> người
+                    </p>
+
+                    <h4 class="text-primary fw-bold">
+                        <span th:text="${#numbers.formatDecimal(room.roomType.price,0,'COMMA',0,'POINT')}"></span>đ /
+                        đêm
+                    </h4>
+                </div>
+
+                <!-- RIGHT -->
+                <form  th:action="@{/booking/confirm}"  th:object="${booking}" method="POST">
+                   <input type="hidden" name="roomId" th:value="${room.id}" />
+
+                    <div class="form-section-title">Thông tin khách hàng</div>
+
+                    <div class="row g-3">
+
+                        <div class="col-md-6">
+                            <input class="form-control" th:field="*{customerName}"  placeholder="Họ và tên" required />
+                        </div>
+
+                        <div class="col-md-6">
+                            <input class="form-control" name="phone" placeholder="Số điện thoại" required />
+                        </div>
+
+                        <div class="col-md-6">
+                            <input class="form-control" name="email" placeholder="Email" required />
+                        </div>
+
+                        <div class="col-md-6">
+                            <input class="form-control" name="voucherCode" placeholder="Voucher (nếu có)" />
+                        </div>
+
+                        <div class="col-md-6">
+                            <input type="date" name="checkIn" class="form-control" required />
+                        </div>
+
+                        <div class="col-md-6">
+                            <input type="date" name="checkOut" class="form-control" required />
+                        </div>
+
+                        <div class="col-12">
+                            <textarea name="note" class="form-control" rows="2"></textarea>
+                        </div>
+
+                    </div>
+
+                    <button class="btn btn-confirm-booking w-100 mt-4 text-white">
+                        XÁC NHẬN ĐẶT PHÒNG
+                    </button>
+
+                </form>
+
+
+            </div>
+        </div>
+
+        <footer class="bg-dark text-white py-5">
+            <div class="container text-center">
+                <p class="mb-0 opacity-50 small">
+                    © 2026 LuxStay System. Managed by Thanh.
+                </p>
+            </div>
+        </footer>
+
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+
+</html>

@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Lịch sử đặt phòng | LuxStay</title>
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+    />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
+    />
+    <link rel="stylesheet" href="/css/styles.css" />
+    <style>
+      /* Tùy chỉnh danh sách lịch sử */
+      .history-container {
+        max-width: 900px;
+        margin: 40px auto;
+      }
+
+      .booking-history-card {
+        background: #fff;
+        border-radius: 16px;
+        border: 1px solid #eee;
+        transition: all 0.3s ease;
+        overflow: hidden;
+      }
+
+      .booking-history-card:hover {
+        transform: translateY(-3px);
+        box-shadow: 0 10px 25px rgba(0, 0, 0, 0.05);
+      }
+
+      .history-img {
+        width: 100%;
+        height: 150px;
+        object-fit: cover;
+      }
+
+      /* Badge trạng thái */
+      .status-badge {
+        padding: 6px 12px;
+        border-radius: 50px;
+        font-size: 0.75rem;
+        font-weight: 700;
+        text-uppercase: uppercase;
+      }
+      .status-pending {
+        background: #fff4e5;
+        color: #ff9800;
+      } /* Chờ xác nhận */
+      .status-confirmed {
+        background: #e8f5e9;
+        color: #2e7d32;
+      } /* Đã xác nhận */
+      .status-cancelled {
+        background: #ffebee;
+        color: #c62828;
+      } /* Đã hủy */
+
+      .info-label {
+        font-size: 0.8rem;
+        color: #888;
+        margin-bottom: 2px;
+      }
+      .info-value {
+        font-weight: 600;
+        color: #333;
+      }
+    </style>
+  </head>
+  <body>
+    <div th:insert="~{layouts/user/header}"></div>
+
+    <div class="container history-container px-3">
+      <div class="d-flex justify-content-between align-items-center mb-4">
+        <h3 class="fw-bold mb-0">Phòng đã đặt</h3>
+      </div>
+
+      <div
+        th:if="${#lists.isEmpty(bookings)}"
+        class="text-center py-5 bg-white rounded-4 border"
+      >
+        <img
+          src="https://cdn-icons-png.flaticon.com/512/4076/4076549.png"
+          width="120"
+          class="opacity-25 mb-3"
+        />
+        <h5 class="text-muted">Bạn chưa có chuyến đi nào</h5>
+        <a href="/" class="btn btn-primary mt-3 px-4 rounded-pill"
+          >Khám phá ngay</a
+        >
+      </div>
+
+      <div class="row g-4">
+        <div class="col-12" th:each="booking : ${bookings}">
+          <div class="booking-history-card shadow-sm">
+            <div class="row g-0">
+              <div class="col-md-3">
+                <img
+                  th:src="@{'/' + ${booking.room.img}}"
+                  class="history-img"
+                  alt="Room"
+                />
+              </div>
+
+              <div class="col-md-6 p-4">
+                <div class="d-flex align-items-center gap-2 mb-2">
+                  <span
+                    class="badge bg-primary bg-opacity-10 text-primary px-2 py-1"
+                    th:text="${booking.room.roomType.name}"
+                    >Suite</span
+                  >
+                  <span class="text-muted small"
+                    >Mã đơn: #<span th:text="${booking.id}">12345</span></span
+                  >
+                </div>
+                <h5
+                  class="fw-bold mb-3"
+                  th:text="${booking.room.roomType.name + ' - Phòng ' + booking.room.roomNumber}"
+                >
+                  Phòng Suite - 101
+                </h5>
+
+                <div class="row">
+                  <div class="col-6 mb-2">
+                    <div class="info-label">Nhận phòng</div>
+                    <div
+                      class="info-value"
+                      th:text="${#temporals.format(booking.checkInDate, 'dd/MM/yyyy')}"
+                    >
+                      01/01/2026
+                    </div>
+                  </div>
+                  <div class="col-6 mb-2">
+                    <div class="info-label">Trả phòng</div>
+                    <div
+                      class="info-value"
+                      th:text="${#temporals.format(booking.checkOutDate, 'dd/MM/yyyy')}"
+                    >
+                      03/01/2026
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <div
+                class="col-md-3 p-4 border-start bg-light bg-opacity-50 d-flex flex-column justify-content-between align-items-end"
+              >
+                <span class="status-badge status-confirmed">Đã xác nhận</span>
+
+                <div class="text-end">
+                  <div class="info-label">Tổng cộng</div>
+                  <div
+                    class="fs-4 fw-bold text-primary"
+                    th:text="${#numbers.formatDecimal(booking.totalPrice, 0, 'COMMA', 0, 'POINT')} + 'đ'"
+                  >
+                    1,500,000đ
+                  </div>
+                </div>
+
+                <a
+                  th:href="@{/booking-details/{id}(id=${booking.id})}"
+                  class="btn btn-outline-primary btn-sm w-100 rounded-pill mt-2"
+                >
+                  Xem chi tiết
+                </a>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <footer class="bg-dark text-white py-4 mt-5">
+      <div class="container text-center">
+        <p class="mb-0 small opacity-50">© 2026 LuxStay History Page</p>
+      </div>
+    </footer>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+  </body>
+</html>
