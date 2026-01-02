@@ -67,19 +67,44 @@
               >
             </li>
             <li>
-              <a class="dropdown-item" href="#"
+              <a class="dropdown-item" href="/booking-history"
                 ><i class="fas fa-history me-2"></i>Lịch sử đặt phòng</a
               >
             </li>
             <li><hr class="dropdown-divider" /></li>
+
             <li>
-              <a class="dropdown-item text-danger" href="#"
-                ><i class="fas fa-sign-out-alt me-2"></i>Đăng xuất</a
+              <!-- CHƯA ĐĂNG NHẬP -->
+              <a
+                sec:authorize="isAnonymous()"
+                class="dropdown-item"
+                th:href="@{/login}"
               >
+                <i class="fas fa-sign-in-alt me-2"></i>
+                Đăng nhập
+              </a>
+
+              <!-- ĐÃ ĐĂNG NHẬP -->
+              <a
+                sec:authorize="isAuthenticated()"
+                class="dropdown-item text-danger"
+                th:href="@{/logout}"
+              >
+                <i class="fas fa-sign-out-alt me-2"></i>
+                Đăng xuất
+              </a>
             </li>
           </ul>
         </li>
       </ul>
+
+      <div sec:authorize="isAuthenticated()">
+        Hello:
+        <span
+          style="color: darkturquoise; font-weight: bold"
+          th:text="${#authentication.principal.getFullName()}"
+        ></span>
+      </div>
     </div>
   </div>
 </nav>

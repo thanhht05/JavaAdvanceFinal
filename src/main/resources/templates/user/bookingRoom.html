@@ -90,12 +90,12 @@
 
                     <h4 class="text-primary fw-bold">
                         <span th:text="${#numbers.formatDecimal(room.roomType.price,0,'COMMA',0,'POINT')}"></span>đ /
-                        đêm
+                        ngày
                     </h4>
                 </div>
 
                 <!-- RIGHT -->
-                <form  th:action="@{/booking/confirm}"  th:object="${booking}" method="POST">
+                <form  th:action="@{/booking/confirm}"  th:object="${bookingDTO}" method="POST">
                    <input type="hidden" name="roomId" th:value="${room.id}" />
 
                     <div class="form-section-title">Thông tin khách hàng</div>
@@ -131,6 +131,10 @@
                         </div>
 
                     </div>
+                    <div th:if="${error}" class="alert alert-danger mt-2">
+                         <span th:text="${error}"></span>
+                    </div>
+
 
                     <button class="btn btn-confirm-booking w-100 mt-4 text-white">
                         XÁC NHẬN ĐẶT PHÒNG

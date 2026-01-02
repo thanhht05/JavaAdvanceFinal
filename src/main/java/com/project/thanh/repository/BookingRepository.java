@@ -11,4 +11,6 @@ import com.project.thanh.domain.Booking;
 public interface BookingRepository extends JpaRepository<Booking, Long> {
     List<Booking> findAllByUser_Id(Long userId);
 
+    Booking findById(long id);
+
 }

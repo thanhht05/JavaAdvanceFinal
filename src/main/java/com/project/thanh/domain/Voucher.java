@@ -1,5 +1,6 @@
 package com.project.thanh.domain;
 
+import java.time.LocalDate;
 import java.util.Date;
 
 import jakarta.persistence.Entity;
@@ -20,8 +21,8 @@ public class Voucher {
     private long id;
 
     private String code;
-    private Date startDate;
-    private Date endDate;
+    private LocalDate startLocalDate;
+    private LocalDate endDate;
     private int discountValue;
     private int maxDiscount;
     private int usageLimit;

@@ -1,0 +1,319 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Chi tiết đặt phòng</title>
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+    />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
+    />
+    <link rel="stylesheet" href="/css/styles.css" />
+
+    <style>
+      .detail-wrapper {
+        max-width: 900px;
+        margin: 50px auto;
+      }
+
+      /* Hiệu ứng tờ hóa đơn */
+      .receipt-card {
+        background: #fff;
+        border: none;
+        border-radius: 20px;
+        box-shadow: 0 10px 40px rgba(0, 0, 0, 0.05);
+        position: relative;
+      }
+
+      /* Đường răng cưa trang trí ở đầu/cuối hóa đơn (tùy chọn) */
+      .receipt-header {
+        background: #0d6efd;
+        color: #fff;
+        padding: 30px;
+        border-radius: 20px 20px 0 0;
+        text-align: center;
+      }
+
+      .info-section {
+        padding: 30px;
+        border-bottom: 1px dashed #dee2e6;
+      }
+
+      .info-section:last-child {
+        border-bottom: none;
+      }
+
+      .label-title {
+        font-size: 0.85rem;
+        color: #888;
+        text-uppercase: uppercase;
+        letter-spacing: 1px;
+        font-weight: 700;
+        margin-bottom: 10px;
+        display: block;
+      }
+
+      .value-text {
+        font-size: 1.1rem;
+        font-weight: 600;
+        color: #333;
+      }
+
+      /* Bảng tính tiền */
+      .price-table {
+        background: #f8f9fa;
+        border-radius: 12px;
+        padding: 20px;
+      }
+
+      @media print {
+        .no-print {
+          display: none;
+        }
+        .receipt-card {
+          box-shadow: none;
+          border: 1px solid #eee;
+        }
+      }
+      .btn-cancel {
+        border: 1px solid #ff4d4f;
+        color: #ff4d4f;
+        background: transparent;
+        transition: all 0.3s;
+      }
+
+      .btn-cancel:hover {
+        background: #ff4d4f;
+        color: #fff;
+        box-shadow: 0 4px 12px rgba(255, 77, 79, 0.2);
+      }
+
+      /* Tùy chỉnh Modal xác nhận */
+      .modal-confirm-cancel .modal-content {
+        border-radius: 20px;
+        border: none;
+      }
+      .modal-confirm-cancel .modal-header {
+        border-bottom: none;
+        padding-top: 30px;
+      }
+      .modal-confirm-cancel .modal-footer {
+        border-top: none;
+        padding-bottom: 30px;
+      }
+      .icon-box-danger {
+        width: 80px;
+        height: 80px;
+        background: #fff1f0;
+        color: #ff4d4f;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 40px;
+        margin: 0 auto 20px;
+      }
+    </style>
+  </head>
+  <body class="bg-light">
+    <div th:insert="~{layouts/user/header}"></div>
+
+    <div class="container detail-wrapper px-3">
+      <div
+        class="d-flex justify-content-between align-items-center mb-4 no-print"
+      >
+        <a
+          href="/booking-history"
+          class="btn btn-link text-decoration-none text-muted p-0"
+        >
+          <i class="fas fa-chevron-left me-1"></i> Quay lại lịch sử
+        </a>
+      </div>
+
+      <div class="receipt-card">
+        <div class="receipt-header">
+          <div class="mb-2"><i class="fas fa-check-circle fs-1"></i></div>
+          <h3 class="fw-bold">ĐẶT PHÒNG THÀNH CÔNG</h3>
+          <p class="mb-0 opacity-75">Cảm ơn bạn đã lựa chọn LuxStay!</p>
+        </div>
+
+        <div class="info-section">
+          <div class="row">
+            <div class="col-md-6 mb-4 mb-md-0">
+              <span class="label-title">Mã đặt phòng</span>
+              <div class="value-text text-primary fs-4">
+                #LUX-<span th:text="${booking.id}">12345</span>
+              </div>
+            </div>
+            <div class="col-md-6">
+              <span class="label-title">Trạng thái</span>
+              <span
+                th:classappend="
+        ${booking.bookingStatus.name() == 'PENDING'} ? 'status-pending' :
+        (${booking.bookingStatus.name() == 'CONFIRMED'} ? 'status-confirmed' :
+        'status-cancelled')"
+                class="status-badge"
+                th:text="
+        ${booking.bookingStatus.name() == 'PENDING'} ? 'Chờ xác nhận' :
+        (${booking.bookingStatus.name() == 'CONFIRMED'} ? 'Đã xác nhận' :
+        'Đã hủy')
+    "
+              >
+              </span>
+            </div>
+          </div>
+        </div>
+
+        <div class="info-section">
+          <h6 class="fw-bold mb-3">
+            <i class="fas fa-user me-2"></i>Thông tin người nhận phòng
+          </h6>
+          <div class="row">
+            <div class="col-sm-4 mb-3">
+              <span class="label-title">Khách hàng</span>
+              <div class="value-text" th:text="${booking.customerName}">
+                Nguyễn Văn A
+              </div>
+            </div>
+            <div class="col-sm-4 mb-3">
+              <span class="label-title">Số điện thoại</span>
+              <div class="value-text" th:text="${booking.phone}">
+                0987 654 321
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="info-section">
+          <h6 class="fw-bold mb-3">
+            <i class="fas fa-hotel me-2"></i>Chi tiết phòng lưu trú
+          </h6>
+          <div
+            class="d-flex gap-4 align-items-center bg-light p-3 rounded-3 mb-4"
+          >
+            <img
+              th:src="@{'/' + ${booking.room.img}}"
+              class="rounded-3"
+              width="120"
+              height="90"
+              style="object-fit: cover"
+            />
+            <div>
+              <h5 class="fw-bold mb-1" th:text="${booking.room.roomType.name}">
+                Deluxe Ocean View
+              </h5>
+              <p class="text-muted mb-0">
+                Số phòng:
+                <span
+                  class="text-dark fw-bold"
+                  th:text="${booking.room.roomNumber}"
+                  >101</span
+                >
+                · Tầng:
+                <span class="text-dark fw-bold" th:text="${booking.room.flor}"
+                  >2</span
+                >
+                · Sức chứa:
+                <span
+                  class="text-dark fw-bold"
+                  th:text="${booking.room.roomType.capacity}"
+                  >2</span
+                >
+                người
+              </p>
+            </div>
+          </div>
+
+          <div class="row">
+            <div class="col-6">
+              <span class="label-title">Nhận phòng (Check-in)</span>
+              <div class="value-text">
+                <i class="far fa-calendar-alt me-2 text-primary"></i>
+                <span
+                  th:text="${#temporals.format(booking.checkInDate, 'dd/MM/yyyy')}"
+                ></span>
+              </div>
+              <small class="text-muted">Sau 14:00</small>
+            </div>
+            <div class="col-6 border-start">
+              <span class="label-title">Trả phòng (Check-out)</span>
+              <div class="value-text">
+                <i class="far fa-calendar-check me-2 text-primary"></i>
+                <span
+                  th:text="${#temporals.format(booking.checkOutDate, 'dd/MM/yyyy')}"
+                ></span>
+              </div>
+              <small class="text-muted">Trước 12:00</small>
+            </div>
+          </div>
+        </div>
+
+        <div class="info-section pb-5">
+          <div class="price-table">
+            <div class="d-flex justify-content-between mb-2">
+              <span>Đơn giá / ngày</span>
+              <span
+                class="fw-bold"
+                th:text="${#numbers.formatDecimal(booking.room.roomType.price, 0, 'COMMA', 0, 'POINT')} + 'đ'"
+              ></span>
+            </div>
+            <div class="d-flex justify-content-between mb-2">
+              <span>Số ngày lưu trú</span>
+              <span th:text="${day}" class="fw-bold"> 2 ngày</span>
+            </div>
+            <div th:if="${booking.voucher != null}">
+              <div class="d-flex justify-content-between mb-2">
+                <span>Mã voucher đã áp dụng</span>
+                <span th:text="${booking.voucher.code}" class="fw-bold">
+                  2 ngày</span
+                >
+              </div>
+
+              <div class="d-flex justify-content-between mb-2">
+                <div>
+                  <span>Số tiền được giảm</span>
+                  (
+                  <span
+                    th:text="${booking.voucher.discountValue}"
+                    class="fw-bold"
+                  ></span
+                  >% )
+                </div>
+                <span th:text="${booking.discountAmount}" class="fw-bold">
+                </span>
+              </div>
+            </div>
+            <hr />
+            <div class="d-flex justify-content-between align-items-center">
+              <span class="fs-5 fw-bold">Tổng thanh toán</span>
+              <span
+                class="fs-3 fw-bold text-primary"
+                th:text="${#numbers.formatDecimal(booking.finalPrice, 0, 'COMMA', 0, 'POINT')} + 'đ'"
+                >1,575,000đ</span
+              >
+            </div>
+            <button
+              type="button"
+              class="btn btn-cancel btn-sm rounded-pill px-4"
+              th:if="${canCancel}"
+            >
+              <i class="fas fa-times-circle me-1"></i> Hủy phòng
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <p class="text-center mt-4 text-muted small no-print">
+        Bạn có thể xuất trình mã QR hoặc hóa đơn này khi làm thủ tục nhận phòng
+        tại quầy lễ tân.
+      </p>
+    </div>
+
+    <footer class="py-5 no-print"></footer>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+  </body>
+</html>
