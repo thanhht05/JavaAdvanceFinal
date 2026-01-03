@@ -20,4 +20,8 @@ public class RoomService {
     public Room getRoomById(long id) {
         return this.roomRepository.findById(id);
     }
+
+    public void saveRoom(Room room) {
+        this.roomRepository.save(room);
+    }
 }

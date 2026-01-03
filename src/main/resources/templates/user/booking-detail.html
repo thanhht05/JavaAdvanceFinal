@@ -295,13 +295,18 @@
                 >1,575,000đ</span
               >
             </div>
-            <button
-              type="button"
-              class="btn btn-cancel btn-sm rounded-pill px-4"
-              th:if="${canCancel}"
+            <form
+              th:action="@{/booking/cancel/{id}(id=${booking.id})}"
+              method="POST"
             >
-              <i class="fas fa-times-circle me-1"></i> Hủy phòng
-            </button>
+              <button
+                type="submit"
+                class="btn btn-cancel btn-sm rounded-pill px-4"
+                th:if="${canCancel}"
+              >
+                <i class="fas fa-times-circle me-1"></i> Hủy phòng
+              </button>
+            </form>
           </div>
         </div>
       </div>

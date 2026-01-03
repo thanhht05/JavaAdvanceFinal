@@ -155,16 +155,4 @@ public class HomepageController {
         return "user/bookingHistory";
     }
 
-    @GetMapping("/booking-details/{id}")
-    public String handleGetBookingDetailPage(@PathVariable Long id, Model model) {
-        Booking booking = this.bookingService.getBookingById(id);
-        long day = ChronoUnit.DAYS.between(booking.getCheckInDate(), booking.getCheckOutDate());
-        boolean canCancel = LocalDate.now().isBefore(booking.getCheckInDate());
-        model.addAttribute("canCancel", canCancel);
-        model.addAttribute("booking", booking);
-        model.addAttribute("day", day);
-
-        return "user/booking-detail";
-    }
-
 }

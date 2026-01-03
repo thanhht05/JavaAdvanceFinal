@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Admin - Thêm mới phòng</title>
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+    />
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.0/font/bootstrap-icons.css"
+    />
+    <link rel="stylesheet" href="/css/style-admin.css" />
+
+    <style>
+      body {
+        background-color: #f4f7f6;
+        min-height: 100vh;
+        display: flex;
+      }
+
+      /* Main Content Styling */
+      .main-content {
+        flex-grow: 1;
+        padding: 40px;
+      }
+
+      .form-container {
+        background: white;
+        border-radius: 15px;
+        padding: 30px;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+      }
+
+      .img-preview-box {
+        width: 100%;
+        height: 200px;
+        border: 2px dashed #ddd;
+        border-radius: 10px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        overflow: hidden;
+        background: #fafafa;
+      }
+      #preview {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        display: none;
+      }
+    </style>
+  </head>
+  <body>
+    <div th:insert="~{layouts/admin/sidebar}"></div>
+
+    <div class="main-content">
+      <div class="container-fluid">
+        <div class="d-flex justify-content-between align-items-center mb-4">
+          <h2 class="fw-bold">Thêm phòng mới</h2>
+          <nav aria-label="breadcrumb">
+            <ol class="breadcrumb mb-0">
+              <li class="breadcrumb-item"><a href="#">Admin</a></li>
+              <li class="breadcrumb-item active">Rooms</li>
+            </ol>
+          </nav>
+        </div>
+
+        <div class="form-container">
+          <form
+            th:action="@{/admin/create-room}"
+            th:object="${room}"
+            method="POST"
+            enctype="multipart/form-data"
+          >
+            <div class="row g-4">
+              <div class="col-lg-7">
+                <div class="row g-3">
+                  <div class="col-md-6">
+                    <label class="form-label fw-bold">Số phòng</label>
+                    <input
+                      type="number"
+                      th:field="*{roomNumber}"
+                      class="form-control"
+                      placeholder="101"
+                      required
+                    />
+                  </div>
+                  <div class="col-md-6">
+                    <label class="form-label fw-bold">Tầng</label>
+                    <input
+                      type="number"
+                      th:field="*{flor}"
+                      class="form-control"
+                      placeholder="1"
+                      required
+                    />
+                  </div>
+                  <div class="col-md-12">
+                    <label class="form-label fw-bold">Loại phòng</label>
+                    <select th:field="*{roomType}" class="form-select" required>
+                      <option value="">Chọn loại phòng...</option>
+                      <option
+                        th:each="type : ${roomTypes}"
+                        th:value="${type.id}"
+                        th:text="${type.name}"
+                      ></option>
+                    </select>
+                  </div>
+                  <div class="col-md-12">
+                    <label class="form-label fw-bold">Mô tả phòng</label>
+                    <textarea
+                      th:field="*{description}"
+                      class="form-control"
+                      rows="5"
+                      placeholder="Mô tả tiện ích, hướng nhìn..."
+                    ></textarea>
+                  </div>
+                </div>
+              </div>
+
+              <div class="col-lg-5">
+                <label class="form-label fw-bold">Hình ảnh phòng</label>
+                <div class="img-preview-box mb-3">
+                  <i id="uploadIcon" class="bi bi-image fs-1 text-muted"></i>
+                  <img id="preview" src="#" alt="Preview" />
+                </div>
+                <input
+                  type="file"
+                  name="imgRoom"
+                  class="form-control"
+                  id="imgInput"
+                  accept="image/*"
+                  required
+                />
+                <p class="small text-muted mt-2">
+                  Định dạng hỗ trợ: JPG, PNG. Dung lượng tối đa 2MB.
+                </p>
+              </div>
+
+              <div class="col-12 border-top pt-4 mt-4">
+                <div class="d-flex justify-content-end gap-2">
+                  <button type="reset" class="btn btn-light px-4">Hủy</button>
+                  <button type="submit" class="btn btn-primary px-5 fw-bold">
+                    <i class="bi bi-cloud-arrow-up me-2"></i>Lưu phòng
+                  </button>
+                </div>
+              </div>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+
+    <script>
+      const imgInput = document.getElementById("imgInput");
+      const preview = document.getElementById("preview");
+      const uploadIcon = document.getElementById("uploadIcon");
+
+      imgInput.onchange = (evt) => {
+        const [file] = imgInput.files;
+        if (file) {
+          preview.src = URL.createObjectURL(file);
+          preview.style.display = "block";
+          uploadIcon.style.display = "none";
+        }
+      };
+    </script>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+  </body>
+</html>

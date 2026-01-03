@@ -1,0 +1,109 @@
+:root {
+  --primary-gradient: linear-gradient(180deg, #5f2c82, #49a09d);
+  --transition-speed: 0.3s;
+}
+
+body {
+  background-color: #f0f2f5;
+  font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+}
+
+/* --- SIDEBAR --- */
+.sidebar {
+  width: 260px;
+  min-height: 100vh;
+  background: var(--primary-gradient);
+  color: white;
+  transition: all var(--transition-speed);
+  position: sticky;
+  top: 0;
+}
+
+.sidebar a {
+  color: rgba(255, 255, 255, 0.8);
+  text-decoration: none;
+  display: flex;
+  align-items: center;
+  padding: 14px 20px;
+  border-radius: 12px;
+  margin-bottom: 8px;
+  transition: all var(--transition-speed);
+}
+
+.sidebar a:hover {
+  background-color: rgba(255, 255, 255, 0.2);
+  color: white;
+  padding-left: 30px; /* Hiệu ứng trượt khi hover */
+}
+
+.sidebar a.active {
+  background-color: rgba(255, 255, 255, 0.3);
+  color: white;
+  font-weight: bold;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+}
+
+/* --- CARDS & HOVER --- */
+.card {
+  border: none;
+  border-radius: 16px;
+  transition: all var(--transition-speed) ease;
+}
+
+/* Hiệu ứng bay bổng cho các thẻ Stat */
+.stat-card:hover {
+  transform: translateY(-10px);
+  box-shadow: 0 12px 20px rgba(0, 0, 0, 0.15) !important;
+  filter: brightness(1.05);
+  cursor: pointer;
+}
+
+.stat-icon {
+  font-size: 2.5rem;
+  opacity: 0.7;
+}
+
+/* Thẻ trạng thái thay thế cho Progress Bar */
+.sos-card {
+  padding: 20px;
+  text-align: center;
+  border-radius: 12px;
+  border: 1px solid rgba(0, 0, 0, 0.05);
+  background: #fff;
+  transition: transform 0.2s;
+}
+
+.sos-card:hover {
+  transform: scale(1.05);
+  border-color: #49a09d;
+}
+
+/* Colors */
+.bg-purple {
+  background: #6f42c1;
+}
+.bg-green {
+  background: #20c997;
+}
+.bg-orange {
+  background: #fd7e14;
+}
+.bg-red {
+  background: #dc3545;
+}
+
+.tx {
+  width: 46px;
+  height: 30px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* --- FOOTER --- */
+footer {
+  margin-top: 40px;
+  padding: 25px 0;
+  color: #777;
+  border-top: 1px solid #ddd;
+}
