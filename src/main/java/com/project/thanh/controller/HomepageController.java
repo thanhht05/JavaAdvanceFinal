@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -15,6 +16,7 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 
 import com.project.thanh.domain.Booking;
+import com.project.thanh.domain.Role;
 import com.project.thanh.domain.Room;
 import com.project.thanh.domain.User;
 import com.project.thanh.domain.Voucher;
@@ -46,6 +48,7 @@ public class HomepageController {
             @RequestParam(required = false) Integer capacity, Model model, @RequestParam(defaultValue = "1") int page) {
         Long minPrice = null;
         Long maxPrice = null;
+
         if (priceRange != null && !priceRange.isEmpty()) {
             String[] prices = priceRange.split("-");
             minPrice = Long.parseLong(prices[0]);

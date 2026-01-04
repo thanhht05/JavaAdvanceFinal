@@ -10,4 +10,6 @@ import com.project.thanh.domain.RoomType;
 @Repository
 public interface RoomTypeRepository extends JpaRepository<RoomType, Long> {
     List<RoomType> findAll();
+
+    RoomType findById(long id);
 }

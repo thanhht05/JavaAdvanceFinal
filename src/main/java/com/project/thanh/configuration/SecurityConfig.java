@@ -9,6 +9,7 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
 
 import com.project.thanh.service.CustomUserDetailsService;
 
@@ -34,6 +35,11 @@ public class SecurityConfig {
     }
 
     @Bean
+    public AuthenticationSuccessHandler customAuthenticationSuccessHandler() {
+        return new CustomAuthenticationSuccessHandler();
+    }
+
+    @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
 
         http
@@ -46,6 +52,7 @@ public class SecurityConfig {
                         .formLogin((form) -> form
                                 .loginPage("/login")
                                 .defaultSuccessUrl("/", true)
+                                .successHandler(customAuthenticationSuccessHandler())
                                 .failureUrl("/login?error")
                                 .permitAll()));
 

@@ -3,14 +3,17 @@ package com.project.thanh.controller.admin;
 import java.io.IOException;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PathVariable;
 
 import com.project.thanh.domain.Room;
+import com.project.thanh.domain.RoomType;
 import com.project.thanh.service.BookingService;
 import com.project.thanh.service.RoomService;
 import com.project.thanh.service.RoomTypeService;
@@ -35,8 +38,12 @@ public class RoomController {
     private RoomService roomService;
 
     @GetMapping("/admin/room")
-    public String handleGetRoomPage(Model model) {
-        model.addAttribute("rooms", this.roomService.getAllRoom());
+    public String handleGetRoomPage(Model model, @RequestParam(defaultValue = "1") int page) {
+        int size = 6;
+        Page<Room> roomPages = this.roomService.getRommPage(page, size);
+        model.addAttribute("curPage", page);
+        model.addAttribute("rooms", roomPages.getContent());
+        model.addAttribute("totalPages", roomPages.getTotalPages());
         return "admin/room/show";
     }
 
@@ -59,6 +66,34 @@ public class RoomController {
         this.roomService.saveRoom(room);
 
         return "redirect:/admin/dashboard";
+    }
+
+    @GetMapping("/admin/rooms/edit/{id}")
+    public String getUpdateRoomPage(@PathVariable Long id, Model model) {
+        Room room = this.roomService.getRoomById(id);
+        model.addAttribute("room", room);
+        model.addAttribute("roomTypes", this.roomTypeService.getAll());
+        return "admin/room/update";
+    }
+
+    @PostMapping("/admin/rooms/update")
+    public String handleUpdateRoom(@ModelAttribute("room") Room room, @RequestParam("imageFile") MultipartFile file)
+            throws IOException {
+
+        Room updateRoom = this.roomService.getRoomById(room.getId());
+
+        updateRoom.setDescription(room.getDescription());
+        updateRoom.setFlor(room.getFlor());
+        updateRoom.setRoomNumber(room.getRoomNumber());
+        String img = this.uploadService.handleUpLoadFile(file, "img");
+        updateRoom.setImg(img);
+
+        RoomType roomType = this.roomTypeService.getRoomTypeById(room.getRoomType().getId());
+
+        updateRoom.setRoomType(roomType);
+        this.roomService.saveRoom(updateRoom);
+
+        return "redirect:/admin/room";
     }
 
 }
