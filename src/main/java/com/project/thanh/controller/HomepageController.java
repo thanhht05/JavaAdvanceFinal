@@ -41,12 +41,19 @@ public class HomepageController {
     private UserService userService;
 
     @GetMapping("/")
-    public String getHomepage(@RequestParam(required = false) Long minPrice,
-            @RequestParam(required = false) Long maxPrice,
+    public String getHomepage(@RequestParam(required = false) String priceRange,
             @RequestParam(required = false) String type,
             @RequestParam(required = false) Integer capacity, Model model, @RequestParam(defaultValue = "1") int page) {
+        Long minPrice = null;
+        Long maxPrice = null;
+        if (priceRange != null && !priceRange.isEmpty()) {
+            String[] prices = priceRange.split("-");
+            minPrice = Long.parseLong(prices[0]);
+            maxPrice = Long.parseLong(prices[1]);
+
+        }
         int size = 6;
-        Page<Room> romPage = this.roomService.getRommPage(page, size);
+        Page<Room> romPage = this.roomService.getRooms(capacity, type, minPrice, maxPrice, page, size);
 
         model.addAttribute("roomList", romPage.getContent()); // current room int page
         model.addAttribute("curPage", page);

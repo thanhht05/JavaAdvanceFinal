@@ -11,6 +11,7 @@ import org.springframework.stereotype.Service;
 
 import com.project.thanh.domain.Room;
 import com.project.thanh.repository.RoomRepository;
+import com.project.thanh.specification.RoomSpecification;
 
 @Service
 public class RoomService {
@@ -32,6 +33,23 @@ public class RoomService {
 
     public void saveRoom(Room room) {
         this.roomRepository.save(room);
+    }
+
+    public Page<Room> getRooms(
+            Integer capacity,
+            String type,
+            Long minPrice,
+            Long maxPrice,
+            int page,
+            int size) {
+
+        Pageable pageable = PageRequest.of(page - 1, size);
+        Specification<Room> spec = Specification
+                .where(RoomSpecification.hasCapacity(capacity)
+                        .and(RoomSpecification.hasType(type))
+                        .and(RoomSpecification.priceBetween(minPrice, maxPrice)));
+
+        return roomRepository.findAll(spec, pageable);
     }
 
 }
