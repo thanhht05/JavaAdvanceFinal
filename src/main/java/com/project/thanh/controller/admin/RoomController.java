@@ -96,4 +96,18 @@ public class RoomController {
         return "redirect:/admin/room";
     }
 
+    @PostMapping("/admin/rooms/delete/{id}")
+    public String handleDeleteRoom(@PathVariable Long id) {
+
+        Room room = this.roomService.getRoomById(id);
+        if (room != null) {
+            if (this.roomService.checkExistsByBooking(id)) {
+
+            }
+            this.roomService.deleteRoomById(id);
+        }
+
+        return "redirect:/admin/room";
+    }
+
 }

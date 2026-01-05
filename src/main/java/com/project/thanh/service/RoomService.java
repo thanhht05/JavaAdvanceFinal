@@ -1,5 +1,7 @@
 package com.project.thanh.service;
 
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -7,9 +9,14 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
+import com.project.thanh.domain.Booking;
 import com.project.thanh.domain.Room;
+import com.project.thanh.enums.BookingStatus;
+import com.project.thanh.repository.BookingRepository;
 import com.project.thanh.repository.RoomRepository;
 import com.project.thanh.specification.RoomSpecification;
 
@@ -17,6 +24,8 @@ import com.project.thanh.specification.RoomSpecification;
 public class RoomService {
     @Autowired
     private RoomRepository roomRepository;
+    @Autowired
+    private BookingRepository bookingRepository;
 
     public List<Room> getAllRoom() {
         return this.roomRepository.findAll();
@@ -50,6 +59,44 @@ public class RoomService {
                         .and(RoomSpecification.priceBetween(minPrice, maxPrice)));
 
         return roomRepository.findAll(spec, pageable);
+    }
+
+    public void deleteRoomById(long id) {
+        this.roomRepository.deleteById(id);
+    }
+
+    @Scheduled(cron = "0 0 0 * * * ") // 00:00 mỗi ngày
+
+    @Transactional
+    public void autoChecking() {
+        LocalDate today = LocalDate.now();
+        List<Booking> bookings = bookingRepository.findByBookingStatusAndCheckInDate(
+                BookingStatus.CONFIRMED,
+                today);
+        for (Booking booking : bookings) {
+            booking.setBookingStatus(BookingStatus.CHECKED_IN);
+        }
+        System.out.println("AUTO INCHEC RUN AT " + LocalDateTime.now());
+
+    }
+
+    @Scheduled(cron = "0 0 0 * * *") // 00:00 mỗi ngày
+    // @Scheduled(cron = "0 * * * * *") // mỗi phút
+
+    @Transactional
+    public void autoCheckout() {
+
+        LocalDate today = LocalDate.now();
+
+        List<Booking> bookings = bookingRepository.findByCheckOutDateBefore(today);
+
+        for (Booking booking : bookings) {
+
+            if (booking.getBookingStatus() == BookingStatus.CHECKED_IN) {
+                booking.setBookingStatus((BookingStatus.COMPLETED));
+            }
+        }
+        System.out.println("AUTO CHECKOUT RUN AT " + LocalDateTime.now());
     }
 
 }

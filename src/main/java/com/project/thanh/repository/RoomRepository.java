@@ -18,4 +18,6 @@ public interface RoomRepository extends JpaRepository<Room, Long>, JpaSpecificat
 
     Page<Room> findAll(Pageable pageable);
 
+    void deleteById(long id);
+
 }

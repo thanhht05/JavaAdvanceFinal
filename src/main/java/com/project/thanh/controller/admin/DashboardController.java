@@ -6,7 +6,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 
 @Controller
 public class DashboardController {
-    @GetMapping("/admin")
+    @GetMapping("/admin/dashboard")
     public String dashboard(Model model) {
 
         model.addAttribute("newBooking", 12);
