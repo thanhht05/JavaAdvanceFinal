@@ -61,10 +61,6 @@ public class RoomService {
         return roomRepository.findAll(spec, pageable);
     }
 
-    public void deleteRoomById(long id) {
-        this.roomRepository.deleteById(id);
-    }
-
     @Scheduled(cron = "0 0 0 * * * ") // 00:00 mỗi ngày
 
     @Transactional
@@ -97,6 +93,29 @@ public class RoomService {
             }
         }
         System.out.println("AUTO CHECKOUT RUN AT " + LocalDateTime.now());
+    }
+
+    public boolean checkDeleteRoom(Long roomId) {
+
+        Room room = this.getRoomById(roomId);
+        if (room == null) {
+            return false;
+
+        }
+        List<Booking> bookings = bookingRepository.findByRoomId(roomId);
+
+        for (Booking booking : bookings) {
+
+            // Chỉ cần 1 booking đang hoạt động → không xóa
+            if (booking.getBookingStatus() == BookingStatus.PENDING
+                    || booking.getBookingStatus() == BookingStatus.CONFIRMED
+                    || booking.getBookingStatus() == BookingStatus.CHECKED_IN) {
+
+                return false;
+            }
+        }
+        return true;
+
     }
 
 }

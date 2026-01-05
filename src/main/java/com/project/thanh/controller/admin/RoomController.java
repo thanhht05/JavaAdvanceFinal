@@ -37,7 +37,7 @@ public class RoomController {
     @Autowired
     private RoomService roomService;
 
-    @GetMapping("/admin/room")
+    @GetMapping("/admin/rooms")
     public String handleGetRoomPage(Model model, @RequestParam(defaultValue = "1") int page) {
         int size = 6;
         Page<Room> roomPages = this.roomService.getRommPage(page, size);
@@ -96,18 +96,21 @@ public class RoomController {
         return "redirect:/admin/room";
     }
 
+    @GetMapping("/admin/rooms/delete/{id}")
+    public String handleGetDeleteRommPage(@PathVariable Long id, Model model) {
+        Room room = this.roomService.getRoomById(id);
+        boolean isDelete = this.roomService.checkDeleteRoom(id);
+
+        model.addAttribute("isDelete", isDelete);
+
+        model.addAttribute("room", room);
+        return "admin/room/delete";
+    }
+
     @PostMapping("/admin/rooms/delete/{id}")
     public String handleDeleteRoom(@PathVariable Long id) {
 
-        Room room = this.roomService.getRoomById(id);
-        if (room != null) {
-            if (this.roomService.checkExistsByBooking(id)) {
-
-            }
-            this.roomService.deleteRoomById(id);
-        }
-
-        return "redirect:/admin/room";
+        return "redirect:/admin/rooms";
     }
 
 }

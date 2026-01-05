@@ -101,7 +101,7 @@
             <table class="table table-hover align-middle">
               <thead>
                 <tr>
-                  <th>Ảnh</th>
+                  <th>Id</th>
                   <th>Số phòng</th>
                   <th>Tầng</th>
                   <th>Loại phòng</th>
@@ -112,13 +112,7 @@
               </thead>
               <tbody>
                 <tr th:each="room : ${rooms}">
-                  <td>
-                    <img
-                      th:src="@{'/' + ${room.img}}"
-                      class="room-img-td shadow-sm"
-                      alt="Room Image"
-                    />
-                  </td>
+                   <td th:text="${room.id}">1</td>
                   <td>
                     <span class="fw-bold text-dark" th:text="${room.roomNumber}"
                       >101</span
@@ -151,7 +145,7 @@
                     >
                       <i class="bi bi-pencil-square"></i>
                     </a>
-                    <form method="post" th:action="@{/admin/rooms/delete/{id}(id=${room.id})}">
+                    <form method="get" th:action="@{/admin/rooms/delete/{id}(id=${room.id})}">
 
                       <button
                         class="btn btn-outline-danger btn-action"
@@ -178,7 +172,7 @@
                   class="page-item"
                   th:classappend="${curPage <= 1} ? 'disabled'"
                 >
-                  <a class="page-link" th:href="@{/admin/room(page=${curPage - 1})}"
+                  <a class="page-link" th:href="@{/admin/rooms(page=${curPage - 1})}"
                     >Previous</a
                   >
                 </li>
@@ -190,7 +184,7 @@
                 >
                   <a
                     class="page-link page-link-js"
-                    th:href="@{/admin/room(page=${i})}"
+                    th:href="@{/admin/rooms(page=${i})}"
                     th:text="${i}"
                     >1</a
                   >
@@ -200,7 +194,7 @@
                   class="page-item"
                   th:classappend="${curPage >= totalPages} ? 'disabled'"
                 >
-                  <a class="page-link" th:href="@{/admin/room(page=${curPage + 1})}"
+                  <a class="page-link" th:href="@{/admin/rooms(page=${curPage + 1})}"
                     >Next</a
                   >
                 </li>

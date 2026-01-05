@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Admin - Xác nhận xóa phòng</title>
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+    />
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.0/font/bootstrap-icons.css"
+    />
+    <link rel="stylesheet" href="/css/style-admin.css" />
+
+    <style>
+      body {
+        background-color: #f4f7f6;
+        min-height: 100vh;
+        display: flex;
+        margin: 0;
+      }
+
+      /* Main Content */
+      .main-content {
+        flex-grow: 1;
+        padding: 40px;
+      }
+
+      /* Delete Confirmation Card */
+      .delete-card {
+        background: white;
+        border-radius: 20px;
+        overflow: hidden;
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+        border: none;
+        max-width: 800px;
+        margin: 0 auto;
+      }
+
+      .warning-banner {
+        background-color: #fff1f0;
+        border-bottom: 1px solid #ffa39e;
+        padding: 20px;
+        text-align: center;
+        color: #cf1322;
+      }
+
+      .room-summary {
+        display: flex;
+        gap: 20px;
+        align-items: center;
+        background: #fafafa;
+        border-radius: 12px;
+        padding: 20px;
+      }
+      .room-summary img {
+        width: 150px;
+        height: 110px;
+        object-fit: cover;
+        border-radius: 10px;
+      }
+
+      .btn-confirm-delete {
+        background-color: #ff4d4f;
+        border: none;
+        color: white;
+        padding: 12px 30px;
+        font-weight: 700;
+        border-radius: 10px;
+        transition: 0.3s;
+      }
+      .btn-confirm-delete:hover {
+        background-color: #cf1322;
+        transform: scale(1.02);
+      }
+    </style>
+  </head>
+  <body>
+    <div th:insert="~{layouts/admin/sidebar}"></div>
+
+    <div class="main-content">
+      <div class="container-fluid">
+        <nav aria-label="breadcrumb" class="mb-4">
+          <ol class="breadcrumb">
+            <li class="breadcrumb-item">
+              <a href="/admin/rooms">Quản lý phòng</a>
+            </li>
+            <li class="breadcrumb-item active">Xác nhận xóa</li>
+          </ol>
+        </nav>
+
+        <div class="delete-card">
+          <div class="p-4 p-md-5">
+            <h5 class="mb-4 fw-bold">Thông tin phòng sắp xóa:</h5>
+
+            <div class="room-summary mb-5 shadow-sm">
+              <img th:src="@{'/' + ${room.img}}" alt="Room Image" />
+
+              <div>
+                <div
+                  class="badge bg-danger mb-2"
+                  th:text="${room.roomType.name}"
+                >
+                  Standard
+                </div>
+                <h4 class="fw-bold mb-1">
+                  Phòng số <span th:text="${room.roomNumber}"></span>
+                </h4>
+                <p class="text-muted mb-0">
+                  <i class="bi bi-layers me-1"></i> Tầng:
+                  <span th:text="${room.flor}"></span> |
+                  <i class="bi bi-people me-1"></i> Sức chứa:
+                  <span th:text="${room.roomType.capacity}"></span> người
+                </p>
+              </div>
+            </div>
+
+            <!-- ĐƯỢC PHÉP XÓA -->
+            <p class="text-center text-secondary mb-5" th:if="${isDelete}">
+              Mọi dữ liệu liên quan đến phòng này sẽ bị xóa bỏ. Bạn có chắc chắn
+              muốn tiếp tục?
+            </p>
+
+            <!-- KHÔNG ĐƯỢC PHÉP XÓA -->
+            <p class="text-center text-danger mb-5" th:unless="${isDelete}">
+              Phòng này đang được booking, không thể xóa.
+            </p>
+
+            <form
+              method="post"
+              th:action="@{/admin/rooms/delete/{id}(id=${room.id})}"
+            >
+              <div class="d-flex justify-content-center gap-3">
+                <a
+                  href="/admin/rooms"
+                  class="btn btn-light px-5 py-2 fw-bold border"
+                >
+                  <i class="bi bi-arrow-left me-2"></i>Hủy, quay lại
+                </a>
+                <button
+                  type="submit"
+                  class="btn btn-confirm-delete px-5 py-2 shadow"
+                  th:disabled="${!isDelete}"
+                >
+                  <i class="bi bi-trash3-fill me-2"></i>
+                  Đồng ý xóa vĩnh viễn
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+  </body>
+</html>

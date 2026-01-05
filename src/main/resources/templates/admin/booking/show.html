@@ -1,0 +1,312 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Admin - Quản lý đặt phòng</title>
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+    />
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.0/font/bootstrap-icons.css"
+    />
+    <link rel="stylesheet" href="/css/style-admin.css" />
+
+    <style>
+      body {
+        background-color: #f4f7f6;
+        min-height: 100vh;
+        display: flex;
+        margin: 0;
+      }
+
+      /* Main Content Styling */
+      .main-content {
+        flex-grow: 1;
+        padding: 40px;
+      }
+
+      .booking-table-card {
+        background: white;
+        border-radius: 15px;
+        padding: 25px;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+        border: none;
+      }
+
+      /* Status Badge Styling dựa trên BookingStatus Enum */
+      .status-badge {
+        padding: 6px 12px;
+        border-radius: 50px;
+        font-size: 0.75rem;
+        font-weight: 700;
+      }
+      .status-pending {
+        background: #fff4e5;
+        color: #ff9800;
+      } /* Chờ xác nhận */
+      .status-confirmed {
+        background: #e8f5e9;
+        color: #2e7d32;
+      } /* Đã xác nhận */
+      .status-cancelled {
+        background: #ffebee;
+        color: #c62828;
+      } /* Đã hủy */
+      .status-completed {
+        background: #e3f2fd;
+        color: #1976d2;
+      } /* Đã hoàn thành */
+
+      .table thead th {
+        background-color: #f8f9fa;
+        color: #666;
+        font-size: 0.8rem;
+        text-uppercase: uppercase;
+        letter-spacing: 0.5px;
+        border: none;
+      }
+      .customer-info div {
+        font-size: 0.9rem;
+        font-weight: 600;
+      }
+      .customer-info small {
+        color: #888;
+      }
+    </style>
+  </head>
+  <body>
+    <div th:insert="~{layouts/admin/sidebar}"></div>
+
+    <div class="main-content">
+      <div class="container-fluid">
+        <div class="d-flex justify-content-between align-items-center mb-4">
+          <div>
+            <h2 class="fw-bold mb-1">Quản lý đặt phòng</h2>
+            <p class="text-muted">
+              Xem và cập nhật trạng thái đặt phòng của khách hàng
+            </p>
+          </div>
+          <div class="d-flex gap-2">
+            <button class="btn btn-outline-primary">
+              <i class="bi bi-download me-2"></i>Xuất Excel
+            </button>
+          </div>
+        </div>
+
+        <div class="booking-table-card">
+          <div class="row g-3 mb-4">
+            <div class="col-md-4">
+              <div class="input-group">
+                <span class="input-group-text bg-white border-end-0"
+                  ><i class="bi bi-search"></i
+                ></span>
+                <input
+                  type="text"
+                  class="form-control border-start-0"
+                  placeholder="Tên khách, SĐT..."
+                />
+              </div>
+            </div>
+            <div class="col-md-3">
+              <select class="form-select">
+                <option value="">Tất cả trạng thái</option>
+                <option value="PENDING">Chờ xác nhận</option>
+                <option value="CONFIRMED">Đã xác nhận</option>
+                <option value="COMPLETED">Hoàn thành</option>
+                <option value="CANCELLED">Đã hủy</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="table-responsive">
+            <table class="table table-hover align-middle">
+              <thead>
+                <tr>
+                  <th>Mã đơn</th>
+                  <th>Khách hàng</th>
+                  <th>Phòng</th>
+                  <th>Lịch trình (In/Out)</th>
+                  <th>Tổng tiền</th>
+                  <th>Trạng thái</th>
+                  <th class="text-end">Thao tác</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr th:each="booking : ${bookings}">
+                  <td>
+                    <span class="fw-bold text-primary"
+                      >#<span th:text="${booking.id}">101</span></span
+                    >
+                  </td>
+                  <td>
+                    <div class="customer-info">
+                      <div th:text="${booking.customerName}">Nguyễn Văn A</div>
+                      <small
+                        ><i class="bi bi-telephone me-1"></i
+                        ><span th:text="${booking.phone}">098...</span></small
+                      >
+                    </div>
+                  </td>
+                  <td>
+                    <div>
+                      P.<span th:text="${booking.room.roomNumber}">101</span>
+                    </div>
+                    <small
+                      class="text-muted"
+                      th:text="${booking.room.roomType.name}"
+                      >Deluxe</small
+                    >
+                  </td>
+                  <td>
+                    <div class="small">
+                      <i class="bi bi-calendar-plus text-success me-1"></i>
+                      <span
+                        th:text="${#temporals.format(booking.checkInDate, 'dd/MM/yyyy')}"
+                      ></span>
+                    </div>
+                    <div class="small">
+                      <i class="bi bi-calendar-minus text-danger me-1"></i>
+                      <span
+                        th:text="${#temporals.format(booking.checkOutDate, 'dd/MM/yyyy')}"
+                      ></span>
+                    </div>
+                  </td>
+                  <td>
+                    <span
+                      class="fw-bold text-dark"
+                      th:text="${#numbers.formatDecimal(booking.finalPrice, 0, 'COMMA', 0, 'POINT')} + 'đ'"
+                    >
+                    </span>
+                    <div
+                      th:if="${booking.discountAmount > 0}"
+                      class="small text-danger"
+                    >
+                      -<span
+                        th:text="${#numbers.formatDecimal(booking.discountAmount, 0, 'COMMA', 0, 'POINT')}"
+                      ></span
+                      >đ
+                    </div>
+                  </td>
+                  <td>
+                    <span
+                      th:class="'status-badge ' + 
+                                        (${booking.bookingStatus.name() == 'PENDING'} ? 'status-pending' : 
+                                        (${booking.bookingStatus.name() == 'CONFIRMED'} ? 'status-confirmed' : 
+                                        (${booking.bookingStatus.name() == 'CANCELLED'} ? 'status-cancelled' : 'status-completed')))"
+                      th:text="${booking.bookingStatus}"
+                    >
+                      PENDING
+                    </span>
+                  </td>
+                  <td class="text-end">
+                    <div class="dropdown">
+                      <button
+                        class="btn btn-light btn-sm shadow-sm"
+                        type="button"
+                        data-bs-toggle="dropdown"
+                      >
+                        <i class="bi bi-three-dots-vertical"></i>
+                      </button>
+                      <ul class="dropdown-menu dropdown-menu-end shadow-sm">
+                        <li>
+                          <form
+                            method="post"
+                            th:action="@{/admin/bookings/confirm}"
+                          >
+                            <input
+                              type="hidden"
+                              name="bookingId"
+                              th:value="${booking.id}"
+                            />
+
+                            <button class="dropdown-item text-success" href="#">
+                              <i class="bi bi-check-circle me-2"></i>Xác nhận
+                              đơn
+                            </button>
+                          </form>
+                        </li>
+                        <li>
+                          <a
+                            class="dropdown-item"
+                            th:href="@{/admin/bookings/detail/{id}(id=${booking.id})}"
+                            ><i class="bi bi-eye me-2"></i>Xem chi tiết</a
+                          >
+                        </li>
+                        <li><hr class="dropdown-divider" /></li>
+                        <li>
+                          <form
+                            method="post"
+                            th:action="@{/admin/bookings/cancel}"
+                          >
+                            <input
+                              type="hidden"
+                              name="bookingId"
+                              th:value="${booking.id}"
+                            />
+
+                            <button class="dropdown-item text-danger" href="">
+                              <i class="bi bi-x-circle me-2"></i>Hủy đơn
+                            </button>
+                          </form>
+                        </li>
+                      </ul>
+                    </div>
+                  </td>
+                </tr>
+
+                <tr th:if="${#lists.isEmpty(bookings)}">
+                  <td colspan="7" class="text-center py-5 text-muted">
+                    Không có dữ liệu đặt phòng.
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+          <nav>
+            <ul class="pagination justify-content-center mt-3">
+              <li
+                class="page-item"
+                th:classappend="${curPage <= 1} ? 'disabled'"
+              >
+                <a
+                  class="page-link"
+                  th:href="@{/admin/bookings(page=${curPage - 1})}"
+                  >Previous</a
+                >
+              </li>
+
+              <li
+                class="page-item"
+                th:each="i : ${#numbers.sequence(1, totalPages)}"
+                th:classappend="${i == curPage} ? 'active'"
+              >
+                <a
+                  class="page-link page-link-js"
+                  th:href="@{/admin/bookings(page=${i})}"
+                  th:text="${i}"
+                  >1</a
+                >
+              </li>
+
+              <li
+                class="page-item"
+                th:classappend="${curPage >= totalPages} ? 'disabled'"
+              >
+                <a
+                  class="page-link"
+                  th:href="@{/admin/bookings(page=${curPage + 1})}"
+                  >Next</a
+                >
+              </li>
+            </ul>
+          </nav>
+        </div>
+      </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+  </body>
+</html>
