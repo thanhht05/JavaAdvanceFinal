@@ -3,7 +3,7 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Admin - Chi tiết phòng</title>
+    <title th:text="${room.roomType.name} + ' | LuxStay'"></title>
     <link
       href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css"
       rel="stylesheet"
@@ -12,181 +12,250 @@
       rel="stylesheet"
       href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.0/font/bootstrap-icons.css"
     />
-
     <style>
+      :root {
+        --luxury-gold: #c5a059;
+        --primary-blue: #0d6efd;
+        --text-dark: #1a1a1a;
+      }
+
       body {
-        background-color: #f4f7f6;
-        min-height: 100vh;
-        display: flex;
-        margin: 0;
+        font-family: "Inter", sans-serif;
+        background-color: #fff;
       }
 
-      /* Main Content */
-      .main-content {
-        margin-left: 280px;
-        flex-grow: 1;
-        padding: 40px;
-      }
-
-      /* Detail Card */
-      .detail-card {
-        background: white;
-        border-radius: 15px;
+      /* Gallery */
+      .room-gallery {
+        display: grid;
+        grid-template-columns: 2fr 1fr;
+        grid-template-rows: 250px 250px;
+        gap: 10px;
+        border-radius: 20px;
         overflow: hidden;
-        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
-        border: none;
+        margin-bottom: 30px;
       }
-      .room-image-detail {
+      .gallery-main {
+        grid-row: span 2;
+      }
+      .gallery-img {
         width: 100%;
-        max-height: 400px;
+        height: 100%;
         object-fit: cover;
-        border-radius: 12px;
+        transition: filter 0.3s ease;
+        cursor: pointer;
       }
-      .info-label {
-        font-weight: 700;
-        color: #888;
-        text-uppercase: uppercase;
-        font-size: 0.75rem;
+      .gallery-img:hover {
+        filter: brightness(0.8);
       }
-      .info-value {
-        font-size: 1.1rem;
-        color: #333;
-        font-weight: 600;
+
+      /* Sticky Booking Card */
+      .booking-card {
+        position: sticky;
+        top: 100px;
+        border: 1px solid #ddd;
+        border-radius: 16px;
+        padding: 24px;
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
       }
-      .description-box {
+
+      .amenity-icon {
+        width: 40px;
+        height: 40px;
         background: #f8f9fa;
         border-radius: 10px;
-        padding: 20px;
-        line-height: 1.6;
-        color: #555;
-        border-left: 4px solid #0d6efd;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: var(--primary-blue);
+        margin-right: 15px;
+      }
+
+      .price-big {
+        font-size: 1.8rem;
+        font-weight: 800;
+        color: var(--text-dark);
+      }
+
+      .badge-luxury {
+        background: var(--luxury-gold);
+        color: white;
+        font-weight: 600;
+        padding: 5px 15px;
+        border-radius: 30px;
       }
     </style>
+    <link rel="stylesheet" href="/css/styles.css" />
   </head>
   <body>
-    <div class="sidebar p-3 shadow">
-      <div class="d-flex align-items-center mb-4 px-2">
-        <i class="bi bi-building-fill-check fs-3 me-2 text-primary"></i>
-        <h4 class="mb-0">Hotel Admin</h4>
-      </div>
-      <a><i class="bi bi-speedometer2 me-2"></i>Dashboard</a>
-      <a class="active"><i class="bi bi-door-open me-2"></i>Rooms</a>
-      <a><i class="bi bi-calendar-check me-2"></i>Bookings</a>
-      <a><i class="bi bi-ticket-perforated me-2"></i>Vouchers</a>
-      <a><i class="bi bi-credit-card me-2"></i>Payments</a>
-      <a><i class="bi bi-gear me-2"></i>Settings</a>
-      <div class="mt-auto p-2">
-        <a style="font-weight: bold" href="#" class="text-danger"
-          ><i class="bi bi-box-arrow-left me-2"></i>Logout</a
-        >
-      </div>
-    </div>
+    <div th:insert="~{layouts/user/header}"></div>
 
-    <div class="main-content">
-      <div class="container-fluid">
-        <div class="d-flex justify-content-between align-items-center mb-4">
-          <div>
-            <h2 class="fw-bold mb-1">
-              Chi tiết phòng <span th:text="${room.roomNumber}"></span>
-            </h2>
-            <nav aria-label="breadcrumb">
-              <ol class="breadcrumb mb-0">
-                <li class="breadcrumb-item">
-                  <a href="/admin/rooms">Quản lý phòng</a>
-                </li>
-                <li class="breadcrumb-item active">Chi tiết</li>
-              </ol>
-            </nav>
+    <div class="container mt-4 mb-5">
+      <nav aria-label="breadcrumb" class="mb-3">
+        <ol class="breadcrumb">
+          <li class="breadcrumb-item"><a href="/">Trang chủ</a></li>
+          <li
+            class="breadcrumb-item active"
+            th:text="${room.roomType.name}"
+          ></li>
+        </ol>
+      </nav>
+
+      <div class="d-flex justify-content-between align-items-end mb-4">
+        <div>
+          <span class="badge-luxury mb-2 d-inline-block">Phòng Phổ Biến</span>
+          <h1
+            class="fw-bold"
+            th:text="'Phòng ' + ${room.roomNumber} + ' - ' + ${room.roomType.name}"
+          ></h1>
+          <p class="text-muted">
+            <i class="bi bi-geo-alt me-1"></i> Tầng
+            <span th:text="${room.flor}"></span>, LuxStay Hotel Center
+          </p>
+        </div>
+        <div class="d-flex gap-2 mb-2">
+          <button class="btn btn-outline-dark btn-sm rounded-pill">
+            <i class="bi bi-share me-1"></i> Chia sẻ
+          </button>
+          <button class="btn btn-outline-dark btn-sm rounded-pill">
+            <i class="bi bi-heart me-1"></i> Lưu
+          </button>
+        </div>
+      </div>
+
+      <div class="room-gallery shadow-sm">
+        <div class="gallery-main">
+          <img
+            th:src="@{'/' + ${room.img}}"
+            class="gallery-img"
+            alt="Main View"
+          />
+        </div>
+        <div>
+          <img
+            src="https://images.unsplash.com/photo-1582719478250-c89cae4dc85b?auto=format&fit=crop&w=800"
+            class="gallery-img"
+            alt="Detail 1"
+          />
+        </div>
+        <div>
+          <img
+            src="https://images.unsplash.com/photo-1520250497591-112f2f40a3f4?auto=format&fit=crop&w=800"
+            class="gallery-img"
+            alt="Detail 2"
+          />
+        </div>
+      </div>
+
+      <div class="row">
+        <div class="col-lg-8">
+          <div class="py-4 border-bottom">
+            <h4 class="fw-bold mb-3">Trải nghiệm không gian tuyệt vời</h4>
+            <div class="d-flex gap-4">
+              <span class="text-muted"
+                ><i class="bi bi-people me-1"></i> Tối đa
+                <span th:text="${room.roomType.capacity}"></span> khách</span
+              >
+              <span class="text-muted"
+                ><i class="bi bi-door-closed me-1"></i> 1 Phòng ngủ</span
+              >
+              <span class="text-muted"
+                ><i class="bi bi-wifi me-1"></i> Wifi miễn phí</span
+              >
+            </div>
           </div>
-          <div class="d-flex gap-2">
+
+          <div class="py-4 border-bottom">
+            <h5 class="fw-bold mb-3">Mô tả</h5>
+            <p class="text-muted lh-lg" th:text="${room.description}"></p>
+          </div>
+
+          <div class="py-4">
+            <h5 class="fw-bold mb-4">Tiện nghi sẵn có</h5>
+            <div class="row g-4">
+              <div class="col-md-6 d-flex align-items-center">
+                <div class="amenity-icon"><i class="bi bi-wind"></i></div>
+                <div>Điều hòa nhiệt độ</div>
+              </div>
+              <div class="col-md-6 d-flex align-items-center">
+                <div class="amenity-icon"><i class="bi bi-tv"></i></div>
+                <div>TV 4K Netflix</div>
+              </div>
+              <div class="col-md-6 d-flex align-items-center">
+                <div class="amenity-icon"><i class="bi bi-cup-hot"></i></div>
+                <div>Máy pha cà phê</div>
+              </div>
+              <div class="col-md-6 d-flex align-items-center">
+                <div class="amenity-icon">
+                  <i class="bi bi-shield-check"></i>
+                </div>
+                <div>Két sắt an toàn</div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="col-lg-4">
+          <div class="booking-card bg-white">
+            <div class="d-flex justify-content-between align-items-center mb-4">
+              <div>
+                <span
+                  class="price-big"
+                  th:text="${#numbers.formatDecimal(room.roomType.price, 0, 'COMMA', 0, 'POINT')}"
+                ></span>
+                <span class="text-muted small">/đêm</span>
+              </div>
+              <div class="small">
+                <i class="bi bi-star-fill text-warning"></i> 4.9 (12 đánh giá)
+              </div>
+            </div>
+
+            <div class="alert alert-light border small text-muted mb-4">
+              <i class="bi bi-info-circle me-2"></i> Miễn phí hủy phòng trong
+              24h đầu tiên.
+            </div>
+
             <a
-              th:href="@{/admin/rooms/edit/{id}(id=${room.id})}"
-              class="btn btn-primary px-4"
+              th:href="@{/booking/room/{id}(id=${room.id})}"
+              class="btn btn-primary w-100 py-3 fw-bold rounded-3 fs-5 mb-3 shadow"
             >
-              <i class="bi bi-pencil-square me-2"></i>Chỉnh sửa
+              ĐẶT PHÒNG NGAY
             </a>
-            <a href="/admin/rooms" class="btn btn-outline-secondary px-4"
-              >Quay lại</a
-            >
-          </div>
-        </div>
 
-        <div class="row">
-          <div class="col-lg-5 mb-4">
-            <div class="detail-card p-3">
-              <img
-                th:src="@{'/' + ${room.img}}"
-                class="room-image-detail shadow-sm"
-                alt="Room Image"
-              />
-              <div class="mt-4 p-2">
-                <span class="info-label">ID Hệ thống:</span>
-                <div class="info-value text-muted">
-                  #ID-<span th:text="${room.id}"></span>
-                </div>
-              </div>
+            <p class="text-center text-muted x-small mb-0">
+              Bạn sẽ chưa bị trừ tiền ngay lúc này
+            </p>
+
+            <hr class="my-4" />
+
+            <div class="d-flex justify-content-between mb-2">
+              <span class="text-muted">Giá thuê 1 đêm</span>
+              <span
+                th:text="${#numbers.formatDecimal(room.roomType.price, 0, 'COMMA', 0, 'POINT')} + ' đ'"
+              ></span>
             </div>
-          </div>
-
-          <div class="col-lg-7">
-            <div class="detail-card p-4 h-100">
-              <h5 class="fw-bold border-bottom pb-3 mb-4">
-                Thông tin cấu hình
-              </h5>
-
-              <div class="row g-4">
-                <div class="col-md-6">
-                  <span class="info-label">Số phòng</span>
-                  <div class="info-value" th:text="${room.roomNumber}">101</div>
-                </div>
-                <div class="col-md-6">
-                  <span class="info-label">Vị trí tầng</span>
-                  <div class="info-value">
-                    Tầng <span th:text="${room.flor}">1</span>
-                  </div>
-                </div>
-                <div class="col-md-6">
-                  <span class="info-label">Loại phòng</span>
-                  <div>
-                    <span
-                      class="badge bg-primary fs-6"
-                      th:text="${room.roomType.name}"
-                      >Standard</span
-                    >
-                  </div>
-                </div>
-                <div class="col-md-6">
-                  <span class="info-label">Sức chứa</span>
-                  <div class="info-value">
-                    <i class="bi bi-people-fill me-2 text-primary"></i>
-                    <span th:text="${room.roomType.capacity}">2</span> người
-                  </div>
-                </div>
-                <div class="col-md-12">
-                  <span class="info-label">Giá niêm yết mỗi đêm</span>
-                  <div class="info-value text-success fs-3">
-                    <span
-                      th:text="${#numbers.formatDecimal(room.roomType.price, 0, 'COMMA', 0, 'POINT')}"
-                    ></span>
-                    đ
-                  </div>
-                </div>
-
-                <div class="col-12 mt-4">
-                  <span class="info-label">Mô tả chi tiết</span>
-                  <div
-                    class="description-box mt-2"
-                    th:text="${room.description}"
-                  >
-                    Không có mô tả cho phòng này.
-                  </div>
-                </div>
-              </div>
+            <div class="d-flex justify-content-between mb-3">
+              <span class="text-muted">Phí dịch vụ</span>
+              <span>0 đ</span>
+            </div>
+            <div class="d-flex justify-content-between fw-bold fs-5">
+              <span>Tổng cộng</span>
+              <span
+                class="text-primary"
+                th:text="${#numbers.formatDecimal(room.roomType.price, 0, 'COMMA', 0, 'POINT')} + ' đ'"
+              ></span>
             </div>
           </div>
         </div>
       </div>
     </div>
+
+    <footer class="bg-dark text-white py-5 mt-5">
+      <div class="container text-center">
+        <p class="opacity-50">
+          © 2026 LuxStay Luxury Hotel. Mang lại giấc ngủ ngon cho bạn.
+        </p>
+      </div>
+    </footer>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
   </body>

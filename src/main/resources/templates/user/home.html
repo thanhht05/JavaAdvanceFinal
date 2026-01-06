@@ -38,10 +38,12 @@
             <div class="col-md-6 col-xl-4" th:each="room : ${roomList}">
               <div class="room-card h-100 border">
                 <!-- Image -->
-                <div class="room-img-container">
-                  <div class="discount-badge">Giảm 15%</div>
-                  <img th:src="@{'/' + ${room.img}}" alt="Room image" />
-                </div>
+                <a th:href="@{/room-detail/{id}(id=${room.id})}">
+                  <div class="room-img-container">
+                    <div class="discount-badge">Giảm 15%</div>
+                    <img th:src="@{'/' + ${room.img}}" alt="Room image" />
+                  </div>
+                </a>
 
                 <!-- Body -->
                 <div class="card-body p-4">

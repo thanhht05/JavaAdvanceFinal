@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Admin - Thêm mới loại phòng</title>
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+    />
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.0/font/bootstrap-icons.css"
+    />
+
+    <link rel="stylesheet" href="/css/style-admin.css" />
+    <style>
+      body {
+        background-color: #f4f7f6;
+        min-height: 100vh;
+        display: flex;
+        margin: 0;
+      }
+
+      /* Main Content Styling */
+      .main-content {
+        flex-grow: 1;
+        padding: 40px;
+      }
+
+      .form-card {
+        background: white;
+        border-radius: 15px;
+        padding: 35px;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+        border: none;
+        max-width: 700px;
+        margin: 0 auto;
+      }
+
+      .form-label {
+        font-weight: 600;
+        color: #444;
+        margin-bottom: 8px;
+      }
+      .input-group-text {
+        background-color: #f8f9fa;
+        color: #6c757d;
+        font-weight: 600;
+      }
+
+      .section-title {
+        font-size: 1.1rem;
+        font-weight: 700;
+        color: #0d6efd;
+        border-bottom: 2px solid #f0f0f0;
+        padding-bottom: 10px;
+        margin-bottom: 25px;
+      }
+    </style>
+  </head>
+  <body>
+    <div th:insert="~{layouts/admin/sidebar}"></div>
+
+    <div class="main-content">
+      <div class="container-fluid">
+        <div class="d-flex justify-content-between align-items-center mb-4">
+          <div>
+            <h2 class="fw-bold mb-1">Thêm Loại phòng mới</h2>
+            <nav aria-label="breadcrumb">
+              <ol class="breadcrumb mb-0">
+                <li class="breadcrumb-item">
+                  <a href="/admin/room-types">Loại phòng</a>
+                </li>
+                <li class="breadcrumb-item active">Tạo mới</li>
+              </ol>
+            </nav>
+          </div>
+          <a href="/admin/room-types" class="btn btn-outline-secondary px-4"
+            >Quay lại</a
+          >
+        </div>
+
+        <div class="form-card">
+          <form
+            th:action="@{/admin/room-types/create}"
+            th:object="${roomType}"
+            method="POST"
+          >
+            <div class="section-title">
+              <i class="bi bi-info-circle-fill me-2"></i>Cấu hình hạng phòng
+            </div>
+
+            <div class="row g-4">
+              <div class="col-12">
+                <label class="form-label">Tên hạng phòng *</label>
+                <input
+                  type="text"
+                  th:field="*{name}"
+                  class="form-control"
+                  placeholder="Ví dụ: Standard, Deluxe, Suite..."
+                  required
+                />
+                <small class="text-muted"
+                  >Tên này sẽ hiển thị cho khách hàng khi đặt phòng.</small
+                >
+              </div>
+
+              <div class="col-md-6">
+                <label class="form-label">Giá niêm yết / Ngày *</label>
+                <div class="input-group">
+                  <input
+                    type="number"
+                    th:field="*{price}"
+                    class="form-control"
+                    placeholder="1000000"
+                    min="0"
+                    required
+                  />
+                  <span class="input-group-text">VNĐ</span>
+                </div>
+              </div>
+
+              <div class="col-md-6">
+                <label class="form-label">Sức chứa tối đa *</label>
+                <div class="input-group">
+                  <input
+                    type="number"
+                    th:field="*{capacity}"
+                    class="form-control"
+                    placeholder="2"
+                    min="1"
+                    required
+                  />
+                  <span class="input-group-text">Người</span>
+                </div>
+              </div>
+
+              <div class="col-12 border-top pt-4 mt-2 text-end">
+                <button type="reset" class="btn btn-light px-4 me-2">
+                  Xóa form
+                </button>
+                <button
+                  type="submit"
+                  class="btn btn-primary px-5 fw-bold shadow-sm"
+                >
+                  <i class="bi bi-plus-circle me-2"></i>Tạo loại phòng
+                </button>
+              </div>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+  </body>
+</html>

@@ -65,7 +65,7 @@ public class RoomController {
         room.setImg(img);
         this.roomService.saveRoom(room);
 
-        return "redirect:/admin/dashboard";
+        return "redirect:/admin/rooms";
     }
 
     @GetMapping("/admin/rooms/edit/{id}")

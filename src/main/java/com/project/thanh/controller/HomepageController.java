@@ -68,8 +68,14 @@ public class HomepageController {
         return "user/home";
     }
 
+    @GetMapping("/room-detail/{id}")
+    public String getDetailRoomPage(@PathVariable Long id, Model model) {
+        model.addAttribute("room", this.roomService.getRoomById(id));
+        return "user/room/room-detail";
+    }
+
     @GetMapping("/booking/room/{id}")
-    public String getMethodName(@PathVariable Long id, Model model) {
+    public String handleGatBookingPage(@PathVariable Long id, Model model) {
         Room room = this.roomService.getRoomById(id);
         if (room != null) {
             model.addAttribute("room", room);
