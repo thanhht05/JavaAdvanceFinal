@@ -1,0 +1,258 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Admin - Quản lý Voucher</title>
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+    />
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.0/font/bootstrap-icons.css"
+    />
+    <link rel="stylesheet" href="/css/style-admin.css" />
+
+    <style>
+      body {
+        background-color: #f4f7f6;
+        min-height: 100vh;
+        display: flex;
+        margin: 0;
+      }
+
+      .sidebar a.active {
+        background-color: #e7f1ff;
+        color: #0d6efd;
+        font-weight: 600;
+      }
+
+      /* Main Content Styling */
+      .main-content {
+        flex-grow: 1;
+        padding: 40px;
+      }
+
+      .voucher-table-card {
+        background: white;
+        border-radius: 15px;
+        padding: 25px;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+        border: none;
+      }
+
+      .voucher-code {
+        font-family: "Courier New", Courier, monospace;
+        background: #f1f3f5;
+        padding: 4px 8px;
+        border-radius: 5px;
+        font-weight: 700;
+        color: #0d6efd;
+        border: 1px dashed #0d6efd;
+      }
+
+      .status-badge {
+        padding: 6px 12px;
+        border-radius: 50px;
+        font-size: 0.75rem;
+        font-weight: 700;
+      }
+      .status-active {
+        background: #e8f5e9;
+        color: #2e7d32;
+      } /* Đang hiệu lực */
+      .status-expired {
+        background: #ffebee;
+        color: #c62828;
+      } /* Hết hạn */
+      .status-upcoming {
+        background: #e3f2fd;
+        color: #1976d2;
+      } /* Sắp diễn ra */
+
+      .table thead th {
+        background-color: #f8f9fa;
+        color: #666;
+        font-size: 0.8rem;
+        text-uppercase: uppercase;
+        letter-spacing: 0.5px;
+        border: none;
+      }
+    </style>
+  </head>
+  <body>
+    <div th:insert="~{layouts/admin/sidebar}"></div>
+
+    <div class="main-content">
+      <div class="container-fluid">
+        <div class="d-flex justify-content-between align-items-center mb-4">
+          <div>
+            <h2 class="fw-bold mb-1">Quản lý Voucher</h2>
+            <p class="text-muted">
+              Tạo và quản lý các mã giảm giá cho khách hàng
+            </p>
+          </div>
+          <a
+            th:href="@{/admin/vouchers/create}"
+            class="btn btn-primary px-4 py-2 fw-bold"
+          >
+            <i class="bi bi-plus-lg me-2"></i>Thêm Voucher mới
+          </a>
+        </div>
+
+        <div class="voucher-table-card">
+          <div class="row g-3 mb-4">
+            <div class="col-md-4">
+              <div class="input-group">
+                <span class="input-group-text bg-white border-end-0"
+                  ><i class="bi bi-search"></i
+                ></span>
+                <input
+                  type="text"
+                  class="form-control border-start-0"
+                  placeholder="Tìm kiếm mã voucher..."
+                />
+              </div>
+            </div>
+          </div>
+
+          <div class="table-responsive">
+            <table class="table table-hover align-middle">
+              <thead>
+                <tr>
+                  <th>Mã Voucher</th>
+                  <th>Giá trị giảm</th>
+                  <th>Giảm tối đa</th>
+                  <th>Thời hạn</th>
+                  <th>Lượt dùng</th>
+                  <th>Trạng thái</th>
+                  <th class="text-end">Thao tác</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr th:each="v : ${voucherList}">
+                  <td>
+                    <span class="voucher-code" th:text="${v.code}"
+                      >LUX2026</span
+                    >
+                  </td>
+                  <td>
+                    <span
+                      class="fw-bold text-primary"
+                      th:text="${v.discountValue} + '%'"
+                      >15%</span
+                    >
+                  </td>
+                  <td>
+                    <span
+                      th:text="${#numbers.formatDecimal(v.maxDiscount, 0, 'COMMA', 0, 'POINT')} + 'đ'"
+                    ></span>
+                  </td>
+                  <td>
+                    <div class="small">
+                      <i class="bi bi-clock-history me-1"></i>
+                      <span
+                        th:text="${#temporals.format(v.startDate, 'dd/MM/yyyy')}"
+                      ></span>
+                      -
+                      <span
+                        th:text="${#temporals.format(v.endDate, 'dd/MM/yyyy')}"
+                      ></span>
+                    </div>
+                  </td>
+                  <td>
+                    <div class="small fw-bold">
+                      <i class="bi bi-person-check me-1"></i> Còn lại:
+                      <span th:text="${v.usageLimit}"></span>
+                    </div>
+                  </td>
+                  <td>
+                    <span
+                      th:if="${T(java.time.LocalDate).now().isAfter(v.endDate)}"
+                      class="status-badge status-expired"
+                      >Hết hạn</span
+                    >
+                    <span
+                      th:if="${T(java.time.LocalDate).now().isBefore(v.startDate)}"
+                      class="status-badge status-upcoming"
+                      >Sắp diễn ra</span
+                    >
+                    <span
+                      th:if="${T(java.time.LocalDate).now().isAfter(v.startDate.minusDays(1)) && T(java.time.LocalDate).now().isBefore(v.endDate.plusDays(1))}"
+                      class="status-badge status-active"
+                      >Đang chạy</span
+                    >
+                  </td>
+                  <td class="text-end">
+                    <div class="btn-group">
+                      <a
+                        th:href="@{/admin/vouchers/update/{id}(id=${v.id})}"
+                        class="btn btn-sm btn-outline-info"
+                        title="Chỉnh sửa"
+                      >
+                        <i class="bi bi-pencil"></i>
+                      </a>
+                      <a
+                        th:href="@{/admin/vouchers/delete/{id}(id=${v.id})}"
+                        class="btn btn-sm btn-outline-danger"
+                        title="Xóa"
+                      >
+                        <i class="bi bi-trash"></i>
+                      </a>
+                    </div>
+                  </td>
+                </tr>
+
+                <tr th:if="${#lists.isEmpty(voucherList)}">
+                  <td colspan="7" class="text-center py-5 text-muted">
+                    Chưa có mã giảm giá nào được tạo.
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div
+      th:each="v : ${voucherList}"
+      class="modal fade"
+      th:id="'delModal' + ${v.id}"
+      tabindex="-1"
+    >
+      <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content border-0 shadow">
+          <div class="modal-body text-center p-4">
+            <i class="bi bi-exclamation-circle text-danger fs-1 mb-3"></i>
+            <h5 class="fw-bold">Xóa mã voucher này?</h5>
+            <p class="text-muted">
+              Bạn có chắc muốn xóa mã <strong th:text="${v.code}"></strong>?
+              Hành động này sẽ làm khách hàng không thể sử dụng mã này nữa.
+            </p>
+          </div>
+          <div class="modal-footer border-0 justify-content-center pb-4">
+            <button
+              type="button"
+              class="btn btn-light px-4"
+              data-bs-dismiss="modal"
+            >
+              Đóng
+            </button>
+            <form
+              th:action="@{/admin/vouchers/delete/{id}(id=${v.id})}"
+              method="POST"
+            >
+              <button type="submit" class="btn btn-danger px-4">
+                Xác nhận xóa
+              </button>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+  </body>
+</html>
