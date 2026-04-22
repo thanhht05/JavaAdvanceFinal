@@ -73,6 +73,7 @@ public class RoomController {
         Room room = this.roomService.getRoomById(id);
         model.addAttribute("room", room);
         model.addAttribute("roomTypes", this.roomTypeService.getAll());
+
         return "admin/room/update";
     }
 
@@ -85,15 +86,19 @@ public class RoomController {
         updateRoom.setDescription(room.getDescription());
         updateRoom.setFlor(room.getFlor());
         updateRoom.setRoomNumber(room.getRoomNumber());
-        String img = this.uploadService.handleUpLoadFile(file, "img");
-        updateRoom.setImg(img);
+        if (file.isEmpty() || file != null) {
+            String img = this.uploadService.handleUpLoadFile(file, "img");
+            updateRoom.setImg(img);
+
+        }
+        updateRoom.setRoomStatus(room.getRoomStatus());
 
         RoomType roomType = this.roomTypeService.getRoomTypeById(room.getRoomType().getId());
 
         updateRoom.setRoomType(roomType);
         this.roomService.saveRoom(updateRoom);
 
-        return "redirect:/admin/room";
+        return "redirect:/admin/rooms";
     }
 
     @GetMapping("/admin/rooms/delete/{id}")

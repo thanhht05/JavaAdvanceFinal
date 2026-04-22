@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+<!doctype html>
 <html xmlns:th="http://www.thymeleaf.org">
   <head>
     <meta charset="UTF-8" />
@@ -105,6 +105,13 @@
                       placeholder="1"
                       required
                     />
+                  </div>
+                  <div class="col-md-6">
+                    <label class="form-label">Trạng thái phòng</label>
+                    <select class="form-select" th:field="*{roomStatus}">
+                      <option value="AVAILABLE">Available</option>
+                      <option value="BUSY">Busy</option>
+                    </select>
                   </div>
                   <div class="col-md-12">
                     <label class="form-label">Loại phòng</label>

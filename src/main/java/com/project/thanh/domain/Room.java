@@ -1,7 +1,11 @@
 package com.project.thanh.domain;
 
+import com.project.thanh.enums.RoomStatus;
+
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
@@ -25,6 +29,8 @@ public class Room {
     private String description;
     private String img;
 
+    @Enumerated(EnumType.STRING)
+    private RoomStatus roomStatus;
     @ManyToOne
     @JoinColumn(name = "roomType_id")
     private RoomType roomType;
