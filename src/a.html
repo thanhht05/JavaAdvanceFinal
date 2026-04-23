@@ -1,0 +1,298 @@
+<!doctype html>
+<html lang="vi">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Thanh toán - Mimosa System</title>
+    <link rel="stylesheet" href="style.css" />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css"
+    />
+  </head>
+  <style>
+    :root {
+      --primary-color: #0d6efd;
+      --bg-color: #f8f9fa;
+      --text-color: #333;
+      --border-color: #dee2e6;
+      --card-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+    }
+
+    body {
+      background-color: var(--bg-color);
+      color: var(--text-color);
+    }
+
+    /* Navbar */
+    .navbar {
+      background: white;
+      padding: 15px 5%;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      border-bottom: 1px solid var(--border-color);
+    }
+
+    .logo {
+      color: var(--primary-color);
+      font-size: 24px;
+      font-weight: bold;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    /* Main Layout */
+    .payment-container {
+      max-width: 1000px;
+      margin: 40px auto;
+      padding: 0 20px;
+    }
+
+    .payment-grid {
+      display: grid;
+      grid-template-columns: 1.5fr 1fr;
+      gap: 30px;
+    }
+
+    .card {
+      background: white;
+      padding: 25px;
+      border-radius: 12px;
+      box-shadow: var(--card-shadow);
+    }
+
+    h3 {
+      margin-bottom: 20px;
+      font-size: 1.2rem;
+      border-left: 4px solid var(--primary-color);
+      padding-left: 10px;
+    }
+
+    /* Payment Methods */
+    .method-options {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      margin-bottom: 25px;
+    }
+
+    .method-item {
+      display: flex;
+      align-items: center;
+      padding: 15px;
+      border: 1px solid var(--border-color);
+      border-radius: 8px;
+      cursor: pointer;
+      transition: 0.3s;
+    }
+
+    .method-item:hover {
+      background-color: #f0f7ff;
+    }
+
+    .method-item input {
+      margin-right: 15px;
+    }
+
+    .method-content {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .method-content i {
+      color: var(--primary-color);
+      width: 25px;
+    }
+
+    /* Input Styles */
+    .input-group {
+      margin-bottom: 15px;
+    }
+
+    .input-row {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 15px;
+    }
+
+    label {
+      display: block;
+      font-size: 0.9rem;
+      margin-bottom: 5px;
+      color: #666;
+    }
+
+    input[type="text"],
+    input[type="password"] {
+      width: 100%;
+      padding: 10px;
+      border: 1px solid var(--border-color);
+      border-radius: 6px;
+      outline: none;
+    }
+
+    input:focus {
+      border-color: var(--primary-color);
+    }
+
+    /* Order Summary */
+    .room-info-brief {
+      display: flex;
+      gap: 15px;
+      margin-bottom: 20px;
+    }
+
+    .room-info-brief img {
+      width: 80px;
+      height: 60px;
+      object-fit: cover;
+      border-radius: 6px;
+    }
+
+    .price-details {
+      margin-top: 20px;
+    }
+
+    .price-row {
+      display: flex;
+      justify-content: space-between;
+      margin-bottom: 10px;
+      font-size: 0.95rem;
+    }
+
+    .total {
+      font-weight: bold;
+      font-size: 1.2rem;
+      margin-top: 15px;
+    }
+
+    .total-amount {
+      color: var(--primary-color);
+    }
+
+    .discount {
+      color: #28a745;
+    }
+
+    .btn-pay {
+      width: 100%;
+      padding: 15px;
+      background-color: var(--primary-color);
+      color: white;
+      border: none;
+      border-radius: 8px;
+      font-size: 1rem;
+      font-weight: bold;
+      cursor: pointer;
+      margin-top: 25px;
+      transition: 0.3s;
+    }
+
+    .btn-pay:hover {
+      background-color: #0056b3;
+    }
+
+    .secure-text {
+      text-align: center;
+      font-size: 0.8rem;
+      color: #888;
+      margin-top: 15px;
+    }
+
+    /* Footer */
+    .footer {
+      text-align: center;
+      padding: 40px;
+      color: #888;
+      font-size: 0.9rem;
+    }
+
+    /* Responsive */
+    @media (max-width: 768px) {
+      .payment-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+  </style>
+  <body>
+    <header class="navbar">
+      <div class="logo">
+        <i class="fas fa-paper-plane"></i> <span>Mimosa</span>
+      </div>
+      <div class="user-info">
+        <span>Hello: <strong>ADMIN</strong></span>
+      </div>
+    </header>
+
+    <main class="payment-container">
+      <div class="payment-grid">
+        <section style="text-align: center" class="payment-methods card">
+          <div class="qr-code-section">
+            <img
+              src="https://api.qrserver.com/v1/create-qr-code/?size=250x250&data=MimosaPayment420000"
+              alt="QR Payment"
+              class="qr-image"
+            />
+            <div class="timer">
+              Mã hiệu lực trong: <span id="countdown">14:59</span>
+            </div>
+            <h3>Quét mã Qr để thanh toán</h3>
+          </div>
+        </section>
+
+        <aside class="order-summary card">
+          <h3>Tóm tắt đặt phòng</h3>
+          <div class="room-info-brief">
+            <img
+              src="https://images.unsplash.com/photo-1631049307264-da0ec9d70304?auto=format&fit=crop&q=80&w=200"
+              alt="Room 101"
+            />
+            <div>
+              <h4>Phòng số 101</h4>
+              <p>Suite - Tầng 1</p>
+            </div>
+          </div>
+
+          <div class="price-details">
+            <div class="price-row">
+              <span>Giá phòng (2 đêm)</span>
+              <span>400,000đ</span>
+            </div>
+            <div class="price-row">
+              <span>Phí dịch vụ</span>
+              <span>20,000đ</span>
+            </div>
+            <div class="price-row">
+              <span>Giảm giá (Voucher)</span>
+              <span class="discount">- 0đ</span>
+            </div>
+            <hr />
+            <div class="price-row total">
+              <span>Tổng cộng</span>
+              <span class="total-amount">420,000đ</span>
+            </div>
+          </div>
+
+          <button class="btn-pay">THANH TOÁN NGAY</button>
+          <p class="secure-text">
+            <i class="fas fa-shield-alt"></i> Thanh toán an toàn và bảo mật
+          </p>
+        </aside>
+      </div>
+    </main>
+
+    <footer class="footer">
+      <p>© 2026 Mimosa System. Managed by Thanh.</p>
+    </footer>
+  </body>
+</html>
