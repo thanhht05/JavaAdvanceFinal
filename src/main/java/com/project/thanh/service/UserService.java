@@ -4,9 +4,13 @@ import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.webmvc.autoconfigure.WebMvcProperties.Apiversion.Use;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import com.project.thanh.domain.Role;
+import com.project.thanh.domain.Room;
 import com.project.thanh.domain.User;
 import com.project.thanh.dtos.UserDTO;
 import com.project.thanh.repository.RoleRepository;
@@ -23,6 +27,10 @@ public class UserService {
         this.userRepository.save(user);
     }
 
+    public User getUserById(long id) {
+        return this.userRepository.findById(id);
+    }
+
     public User getUserByEmail(String email) {
         return this.userRepository.findByEmail(email);
     }
@@ -37,5 +45,10 @@ public class UserService {
         user.setRole(role);
 
         return user;
+    }
+
+    public Page<User> getRommPage(int page, int size) {
+        Pageable pageable = PageRequest.of(page - 1, size);
+        return this.userRepository.findAll(pageable);
     }
 }

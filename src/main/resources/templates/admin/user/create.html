@@ -1,0 +1,136 @@
+<!doctype html>
+<html xmlns:th="http://www.thymeleaf.org">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Admin - Thêm User Mới</title>
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+    />
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.0/font/bootstrap-icons.css"
+    />
+    <link rel="stylesheet" href="/css/style-admin.css" />
+    <link rel="stylesheet" href="/css/styles.css" />
+
+    <style>
+      body {
+        background-color: #f4f7f6;
+        min-height: 100vh;
+        display: flex;
+      }
+
+      /* Main Content Styling */
+      .main-content {
+        flex-grow: 1;
+        padding: 40px;
+      }
+
+      .form-container {
+        background: white;
+        border-radius: 15px;
+        padding: 30px;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+      }
+    </style>
+  </head>
+  <body>
+    <div th:insert="~{layouts/admin/sidebar}"></div>
+
+    <div class="main-content">
+      <div class="container-fluid">
+        <div class="d-flex justify-content-between align-items-center mb-4">
+          <h2 class="fw-bold">Thêm User mới</h2>
+          <nav aria-label="breadcrumb">
+            <ol class="breadcrumb mb-0">
+              <li class="breadcrumb-item"><a href="#">Admin</a></li>
+              <li class="breadcrumb-item"><a href="#">Users</a></li>
+              <li class="breadcrumb-item active">Thêm mới</li>
+            </ol>
+          </nav>
+        </div>
+
+        <div class="form-container">
+          <form
+            th:action="@{/admin/create-user}"
+            th:object="${user}"
+            method="POST"
+          >
+            <div class="row g-4">
+              <div class="col-lg-8 mx-auto">
+                <div class="row g-3">
+                  <div class="col-md-6">
+                    <label class="form-label fw-bold">Họ và tên</label>
+                    <input
+                      type="text"
+                      th:field="*{fullName}"
+                      class="form-control"
+                      placeholder="Nhập họ và tên"
+                      required
+                    />
+                  </div>
+
+                  <div class="col-md-6">
+                    <label class="form-label fw-bold">Email</label>
+                    <input
+                      type="email"
+                      th:field="*{email}"
+                      class="form-control"
+                      placeholder="example@gmail.com"
+                      required
+                    />
+                  </div>
+
+                  <div class="col-md-6">
+                    <label class="form-label fw-bold">Số điện thoại</label>
+                    <input
+                      type="tel"
+                      th:field="*{phone}"
+                      class="form-control"
+                      placeholder="0987654321"
+                      required
+                    />
+                  </div>
+
+                  <div class="col-md-6">
+                    <label class="form-label fw-bold">Mật khẩu</label>
+                    <input
+                      type="password"
+                      th:field="*{password}"
+                      class="form-control"
+                      placeholder="Nhập mật khẩu"
+                      required
+                    />
+                  </div>
+
+                  <div class="col-md-12">
+                    <label class="form-label fw-bold">Địa chỉ</label>
+                    <textarea
+                      th:field="*{address}"
+                      class="form-control"
+                      rows="3"
+                      placeholder="Nhập địa chỉ chi tiết"
+                    ></textarea>
+                  </div>
+                </div>
+              </div>
+
+              <div class="col-12 border-top pt-4 mt-4">
+                <div class="d-flex justify-content-end gap-2">
+                  <button type="reset" class="btn btn-light px-4">Hủy</button>
+                  <button type="submit" class="btn btn-primary px-5 fw-bold">
+                    <i class="bi bi-person-plus-fill me-2"></i>Lưu User
+                  </button>
+                </div>
+              </div>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+  </body>
+</html>
