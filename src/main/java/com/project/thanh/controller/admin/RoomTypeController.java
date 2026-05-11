@@ -5,6 +5,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import com.project.thanh.domain.RoomType;
@@ -36,6 +37,13 @@ public class RoomTypeController {
 
         return "redirect:/admin/room-types";
 
+    }
+
+    @GetMapping("admin/room-types/edit/{id}")
+    public String getMethodName(@PathVariable Long id, Model model) {
+        RoomType rt = this.roomTypeService.getRoomTypeById(id);
+        model.addAttribute("roomType", rt);
+        return new String();
     }
 
 }

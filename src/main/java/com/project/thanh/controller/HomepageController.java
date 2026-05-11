@@ -204,4 +204,12 @@ public class HomepageController {
         return "user/bookingHistory";
     }
 
+    @GetMapping("/user/profile")
+    public String getMethodName(Model model) {
+        String email = SecurityContextHolder.getContext().getAuthentication().getName();
+        User user = this.userService.getUserByEmail(email);
+        model.addAttribute("user", user);
+        return "user/userProfile";
+    }
+
 }
