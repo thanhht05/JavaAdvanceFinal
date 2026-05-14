@@ -1,5 +1,7 @@
 package com.project.thanh.domain;
 
+import java.util.List;
+
 import com.project.thanh.enums.RoomStatus;
 
 import jakarta.persistence.Column;
@@ -11,6 +13,7 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
+import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 import lombok.Getter;
 import lombok.Setter;
@@ -34,4 +37,7 @@ public class Room {
     @ManyToOne
     @JoinColumn(name = "roomType_id")
     private RoomType roomType;
+
+    @OneToMany(mappedBy = "room")
+    private List<BookingDetail> bookingDetails;
 }

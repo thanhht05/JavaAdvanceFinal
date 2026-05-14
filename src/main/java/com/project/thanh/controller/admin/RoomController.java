@@ -101,16 +101,16 @@ public class RoomController {
         return "redirect:/admin/rooms";
     }
 
-    @GetMapping("/admin/rooms/delete/{id}")
-    public String handleGetDeleteRommPage(@PathVariable Long id, Model model) {
-        Room room = this.roomService.getRoomById(id);
-        boolean isDelete = this.roomService.checkDeleteRoom(id);
+    // @GetMapping("/admin/rooms/delete/{id}")
+    // public String handleGetDeleteRommPage(@PathVariable Long id, Model model) {
+    // Room room = this.roomService.getRoomById(id);
+    // boolean isDelete = this.roomService.checkDeleteRoom(id);
 
-        model.addAttribute("isDelete", isDelete);
+    // model.addAttribute("isDelete", isDelete);
 
-        model.addAttribute("room", room);
-        return "admin/room/delete";
-    }
+    // model.addAttribute("room", room);
+    // return "admin/room/delete";
+    // }
 
     @PostMapping("/admin/rooms/delete/{id}")
     public String handleDeleteRoom(@PathVariable Long id) {

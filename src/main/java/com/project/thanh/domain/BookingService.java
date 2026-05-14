@@ -1,0 +1,37 @@
+package com.project.thanh.domain;
+
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
+import jakarta.persistence.Table;
+import lombok.Getter;
+import lombok.Setter;
+
+@Entity
+@Table(name = "booking_services")
+@Getter
+@Setter
+public class BookingService {
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
+
+    private int quantity;
+
+    private long unitPrice;
+
+    private long totalPrice;
+
+    @ManyToOne
+    @JoinColumn(name = "booking_id")
+    private Booking booking;
+
+    @ManyToOne
+    @JoinColumn(name = "service_id")
+    private Service service;
+
+}

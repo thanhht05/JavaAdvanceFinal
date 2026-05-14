@@ -1,6 +1,7 @@
 package com.project.thanh.controller;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
 import java.util.Optional;
 
@@ -16,13 +17,19 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 
 import com.project.thanh.domain.Booking;
+import com.project.thanh.domain.BookingDetail;
+import com.project.thanh.domain.Invoice;
+import com.project.thanh.domain.InvoiceDetail;
 import com.project.thanh.domain.Role;
 import com.project.thanh.domain.Room;
 import com.project.thanh.domain.User;
 import com.project.thanh.domain.Voucher;
 import com.project.thanh.dtos.BookingDTO;
 import com.project.thanh.enums.BookingStatus;
+import com.project.thanh.service.BookingDetailService;
 import com.project.thanh.service.BookingService;
+import com.project.thanh.service.InvoiceDetailService;
+import com.project.thanh.service.InvoiceService;
 import com.project.thanh.service.RoomService;
 import com.project.thanh.service.UserService;
 import com.project.thanh.service.VoucherService;
@@ -43,7 +50,12 @@ public class HomepageController {
     private UserService userService;
 
     @Autowired
-    private VoucherService voucherService;
+    private BookingDetailService bookingDetailService;
+
+    @Autowired
+    private InvoiceService invoiceService;
+    @Autowired
+    private InvoiceDetailService invoiceDetailService;
 
     @GetMapping("/")
     public String getHomepage(@RequestParam(required = false) String priceRange,
@@ -89,82 +101,114 @@ public class HomepageController {
             @ModelAttribute("bookingDTO") BookingDTO bookingDTO,
             RedirectAttributes redirectAttributes) {
 
-        String email = SecurityContextHolder.getContext().getAuthentication().getName();
+        String email = SecurityContextHolder
+                .getContext()
+                .getAuthentication()
+                .getName();
+
         if (email == null || email.equals("anonymousUser")) {
             return "redirect:/";
         }
 
         User user = userService.getUserByEmail(email);
+
         if (user == null) {
             return "redirect:/login";
         }
 
         Room room = roomService.getRoomById(bookingDTO.getRoomId());
+
         if (room == null) {
             return "redirect:/";
         }
 
-        // 3. TÍNH SỐ NGÀY Ở
-
+        // Tính số ngày ở
         long days = ChronoUnit.DAYS.between(
                 bookingDTO.getCheckIn(),
                 bookingDTO.getCheckOut());
 
         if (days <= 0) {
-            redirectAttributes.addFlashAttribute("error", "Ngày trả phòng không hợp lệ");
+
+            redirectAttributes.addFlashAttribute(
+                    "error",
+                    "Ngày trả phòng không hợp lệ");
+
             return "redirect:/booking/room/" + bookingDTO.getRoomId();
         }
 
         long pricePerDay = room.getRoomType().getPrice();
+
         long totalPrice = days * pricePerDay;
 
-        // 4. XỬ LÝ VOUCHER
-
-        String voucherCode = bookingDTO.getVoucherCode();
-        Voucher voucher = null;
-        long discount = 0;
-
-        if (voucherCode != null && !voucherCode.trim().isEmpty()) {
-
-            voucher = voucherService.getVoucherByCode(voucherCode);
-
-            if (voucher == null
-                    || voucherService.checkVoucherExpired(voucher)
-                    || voucherService.checkUsageVoucher(voucher)) {
-
-                redirectAttributes.addFlashAttribute(
-                        "error", "Voucher không hợp lệ hoặc đã hết hạn");
-                return "redirect:/booking/room/" + bookingDTO.getRoomId();
-            }
-
-            long discountByPercent = totalPrice * voucher.getDiscountValue() / 100;
-            discount = Math.min(discountByPercent, voucher.getMaxDiscount());
-
-            voucher.setUsageLimit(voucher.getUsageLimit() - 1);
-        }
-
-        long finalPrice = totalPrice - discount;
-
-        // 5. TẠO BOOKING
+        // =========================
+        // BOOKING
+        // =========================
 
         Booking booking = new Booking();
+
         booking.setUser(user);
-        booking.setRoom(room);
         booking.setCheckInDate(bookingDTO.getCheckIn());
         booking.setCheckOutDate(bookingDTO.getCheckOut());
+
         booking.setCustomerName(bookingDTO.getCustomerName());
         booking.setPhone(bookingDTO.getPhone());
 
         booking.setTotalPrice(totalPrice);
-        booking.setFinalPrice(finalPrice);
-        booking.setDiscountAmount(discount);
+
         booking.setBookingStatus(BookingStatus.PENDING);
 
-        if (voucher != null) {
-            booking.setVoucher(voucher);
-        }
+        Booking bookingDb = bookingService.saveBooking(booking);
 
-        bookingService.saveBooking(booking);
+        // =========================
+        // BOOKING DETAIL
+        // =========================
+
+        BookingDetail detail = new BookingDetail();
+
+        detail.setRoom(room);
+        detail.setBooking(bookingDb);
+        detail.setPrice(totalPrice);
+
+        bookingDetailService.save(detail);
+
+        // =========================
+        // INVOICE
+        // =========================
+
+        Invoice invoice = new Invoice();
+
+        invoice.setBooking(bookingDb);
+
+        invoice.setCreatedAt(LocalDateTime.now());
+
+        invoice.setRoomTotal(totalPrice);
+
+        invoice.setServiceTotal(0);
+
+        invoice.setTotalAmount(totalPrice);
+
+        Invoice invoiceDb = this.invoiceService.save(invoice);
+
+        // =========================
+        // INVOICE DETAIL
+        // =========================
+
+        InvoiceDetail invoiceDetail = new InvoiceDetail();
+
+        invoiceDetail.setInvoice(invoiceDb);
+
+        invoiceDetail.setDescription(
+                "Tiền phòng " + room.getRoomNumber());
+
+        invoiceDetail.setQuantity((int) days);
+
+        invoiceDetail.setUnit("Ngày");
+
+        invoiceDetail.setUnitPrice(pricePerDay);
+
+        invoiceDetail.setTotalPrice(totalPrice);
+
+        invoiceDetailService.save(invoiceDetail);
 
         return "redirect:/booking-history";
     }

@@ -24,8 +24,9 @@ public class BookingService {
         return this.bookingRepository.findAll(pageable);
     }
 
-    public void saveBooking(Booking booking) {
-        this.bookingRepository.save(booking);
+    public Booking saveBooking(Booking booking) {
+        Booking db = this.bookingRepository.save(booking);
+        return db;
     }
 
     public List<Booking> getAllBokingByUserId(long userId) {

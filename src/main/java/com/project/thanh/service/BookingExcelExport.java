@@ -46,9 +46,9 @@ public class BookingExcelExport {
                 row.createCell(2).setCellValue(booking.getPhone());
                 row.createCell(3).setCellValue(booking.getCheckInDate().format(formatter));
                 row.createCell(4).setCellValue(booking.getCheckOutDate().format(formatter));
-                row.createCell(5).setCellValue(booking.getDiscountAmount());
+                // row.createCell(5).setCellValue(booking.getDiscountAmount());
                 row.createCell(6).setCellValue(booking.getTotalPrice());
-                row.createCell(7).setCellValue(booking.getFinalPrice());
+                // row.createCell(7).setCellValue(booking.getFinalPrice());
             }
 
             // Auto size column

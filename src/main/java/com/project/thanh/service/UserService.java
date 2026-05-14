@@ -24,6 +24,8 @@ public class UserService {
     private RoleRepository roleRepository;
 
     public void saveUser(User user) {
+        Role role = this.roleRepository.findByRoleName("USER");
+        user.setRole(role);
         this.userRepository.save(user);
     }
 
