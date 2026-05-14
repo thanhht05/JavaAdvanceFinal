@@ -16,6 +16,7 @@ import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
+import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
 import lombok.Getter;
 import lombok.Setter;
@@ -33,8 +34,6 @@ public class Booking {
     private LocalDate checkInDate;
     private LocalDate checkOutDate;
 
-    private long totalPrice;
-
     @Column(columnDefinition = "NVARCHAR(200)")
     private String customerName;
 
@@ -51,4 +50,6 @@ public class Booking {
     private List<BookingDetail> bookingDetails;
     @OneToMany(mappedBy = "booking")
     private List<BookingService> bookingServices;
+    @OneToOne(mappedBy = "booking")
+    private Invoice invoice;
 }

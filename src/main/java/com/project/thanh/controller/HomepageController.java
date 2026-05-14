@@ -153,8 +153,6 @@ public class HomepageController {
         booking.setCustomerName(bookingDTO.getCustomerName());
         booking.setPhone(bookingDTO.getPhone());
 
-        booking.setTotalPrice(totalPrice);
-
         booking.setBookingStatus(BookingStatus.PENDING);
 
         Booking bookingDb = bookingService.saveBooking(booking);
