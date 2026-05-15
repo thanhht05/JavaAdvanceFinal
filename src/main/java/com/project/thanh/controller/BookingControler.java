@@ -92,7 +92,7 @@ public class BookingControler {
         BookingStatus bookingStatus = BookingStatus.valueOf(status);
         this.bookingService.updateBookingStatus(bookingId, bookingStatus);
 
-        return "redirect:/admin/bookings";
+        return "redirect:/admin/bookings/detail/" + bookingId;
     }
 
     @PostMapping("/admin/bookings/confirm")
@@ -179,11 +179,11 @@ public class BookingControler {
          * UPDATE INVOICE TOTAL
          * =========================
          */
+        List<com.project.thanh.domain.BookingService> serviceDetails = bookingServiceService
+                .getByBookingId(booking.getId());
 
-        long serviceTotal = invoiceDetailService
-                .getByInvoice(invoice)
-                .stream()
-                .mapToLong(InvoiceDetail::getTotalPrice)
+        long serviceTotal = serviceDetails.stream()
+                .mapToLong(bs -> bs.getQuantity() * bs.getUnitPrice())
                 .sum();
 
         invoice.setServiceTotal(serviceTotal);

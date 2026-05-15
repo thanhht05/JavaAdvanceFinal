@@ -14,4 +14,8 @@ public class BookingDetailService {
     public void save(BookingDetail bookingDetail) {
         this.bookingDetailRepository.save(bookingDetail);
     }
+
+    public BookingDetail getBookingDetaibyId(long id) {
+        return this.bookingDetailRepository.findById(id);
+    }
 }

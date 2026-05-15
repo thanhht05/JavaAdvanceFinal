@@ -7,5 +7,5 @@ import com.project.thanh.domain.BookingDetail;
 
 @Repository
 public interface BookingDetailRepository extends JpaRepository<BookingDetail, Long> {
-
+    BookingDetail findById(long id);
 }

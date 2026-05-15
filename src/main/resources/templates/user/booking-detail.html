@@ -149,7 +149,7 @@
             <i class="fas fa-check-circle fs-1"></i>
           </div>
 
-          <h2 class="fw-bold mb-2">ĐẶT PHÒNG THÀNH CÔNG</h2>
+          <h2 class="fw-bold mb-2">Lịch sử đặt phòng</h2>
 
           <p class="mb-0 opacity-75">Cảm ơn bạn đã lựa chọn Mimosa Hotel</p>
         </div>
@@ -183,7 +183,7 @@
                     th:text="
                       ${booking.bookingStatus.name() == 'PENDING'} ? 'Chờ xác nhận' :
                       (${booking.bookingStatus.name() == 'CONFIRMED'} ? 'Đã xác nhận' :
-                      'Đã hủy')
+                      'Hoàn thành')
                     "
                   >
                   </span>
@@ -227,21 +227,29 @@
               <div
                 class="d-flex flex-column flex-md-row gap-4 align-items-start bg-light rounded-4 p-3 mb-4"
               >
-                <img th:src="@{'/' + ${booking.room.img}}" class="room-image" />
+                <img th:src="@{'/' + ${detail.room.img}}" class="room-image" />
 
                 <div>
                   <h4
                     class="fw-bold mb-2"
-                    th:text="${booking.room.roomType.name}"
+                    th:text="${detail.room.roomType.name}"
                   >
                     Deluxe Ocean View
                   </h4>
+                  <div class="value-text  text-primary fw-bold">
+                    Giá
+                    <td class="text-end text-primary fw-bold" 
+             
+              th:text="${#numbers.formatDecimal(detail.room.roomType.price, 0, 'COMMA', 0, 'POINT')} + 'đ'">
+            400,000đ
+          </td>
+                  </div>
 
                   <div class="text-muted mb-2">
                     Số phòng:
                     <span
                       class="fw-bold text-dark"
-                      th:text="${booking.room.roomNumber}"
+                      th:text="${detail.room.roomNumber}"
                     >
                       101
                     </span>
@@ -251,7 +259,7 @@
                     Tầng:
                     <span
                       class="fw-bold text-dark"
-                      th:text="${booking.room.flor}"
+                      th:text="${detail.room.flor}"
                     >
                       2
                     </span>
@@ -261,7 +269,7 @@
                     Sức chứa:
                     <span
                       class="fw-bold text-dark"
-                      th:text="${booking.room.roomType.capacity}"
+                      th:text="${detail.room.roomType.capacity}"
                     >
                       2
                     </span>
@@ -305,67 +313,77 @@
           <!-- RIGHT -->
           <div class="col-lg-5">
             <!-- SERVICES -->
-            <div class="info-section">
-              <h5 class="fw-bold mb-4">
-                <i class="fas fa-concierge-bell me-2"></i>
-                Dịch vụ đã sử dụng
-              </h5>
+          <div class="info-section">
+  <h5 class="fw-bold mb-4">
+    <i class="fas fa-concierge-bell me-2"></i>
+    Dịch vụ đã sử dụng
+  </h5>
 
-              <div class="table-responsive">
-                <table class="table service-table align-middle">
-                  <thead class="table-light">
-                    <tr>
-                      <th>Dịch vụ</th>
-                      <th class="text-center">SL</th>
-                      <th class="text-end">Đơn giá</th>
-                      <th class="text-end">Tổng</th>
-                    </tr>
-                  </thead>
+  <div class="table-responsive">
+    <table class="table service-table align-middle">
+      <thead class="table-light">
+        <tr>
+          <th>Dịch vụ</th>
+          <th class="text-center">SL</th>
+          <th class="text-end">Đơn giá</th>
+          <th class="text-end">Tổng</th>
+        </tr>
+      </thead>
 
-                  <tbody>
-                    <tr>
-                      <td>
-                        <div class="fw-semibold">Giặt áo quần</div>
+      <tbody>
+        <!-- Dùng th:each lặp qua list bookingServices từ Model -->
+        <tr th:each="item : ${bookingServices}">
+          <td>
+            <!-- Lấy tên dịch vụ (Giả sử Entity có liên kết tới bảng services) -->
+            <div class="fw-semibold" th:text="${item.service.serviceName}">Giặt áo quần</div>
+          
+          </td>
 
-                        <small class="text-muted"> Laundry Service </small>
-                      </td>
+          <!-- In cột SL (quantity) lấy từ bảng booking_services -->
+          <td class="text-center" th:text="${item.quantity}">2</td>
 
-                      <td class="text-center">2</td>
+          <!-- In cột Đơn giá (unit_price) từ bảng booking_services -->
+          <td class="text-end" th:text="${#numbers.formatDecimal(item.unitPrice, 0, 'COMMA', 0, 'POINT')} + 'đ'">50,000đ</td>
 
-                      <td class="text-end">50,000đ</td>
+          <!-- In cột Tổng (total_price) của từng dịch vụ từ bảng booking_services -->
+          <td class="text-end fw-bold" th:text="${#numbers.formatDecimal(item.totalPrice, 0, 'COMMA', 0, 'POINT')} + 'đ'">100,000đ</td>
+        </tr>
+      </tbody>
 
-                      <td class="text-end fw-bold">100,000đ</td>
-                    </tr>
+      <tfoot>
+        <tr>
+          <td colspan="3" class="text-end fw-bold">
+            Tổng dịch vụ:
+          </td>
+          <!-- In tổng dịch vụ (service_total) lấy từ bảng invoices -->
+          <td class="text-end text-primary fw-bold" 
+              th:if="${invoice != null}"
+              th:text="${#numbers.formatDecimal(invoice.serviceTotal, 0, 'COMMA', 0, 'POINT')} + 'đ'">
+            400,000đ
+          </td>
+          
+          <td class="text-end text-primary fw-bold" 
+              th:unless="${invoice != null}">
+            0đ
+          </td>
+        </tr>
+        <tr>
+          <td colspan="3" class="text-end fw-bold">
+            Tổng đã thanh toán:
+          </td>
+          <!-- In tổng dịch vụ (service_total) lấy từ bảng invoices -->
+          <td class="text-end text-primary fw-bold" 
+              th:if="${invoice != null}"
+              th:text="${#numbers.formatDecimal(invoice.totalAmount, 0, 'COMMA', 0, 'POINT')} + 'đ'">
+            400,000đ
+          </td>
+        </tr>
+      </tfoot>
+    </table>
+  </div>
+</div>
 
-                    <tr>
-                      <td>
-                        <div class="fw-semibold">Buffet sáng</div>
-
-                        <small class="text-muted"> Breakfast Buffet </small>
-                      </td>
-
-                      <td class="text-center">2</td>
-
-                      <td class="text-end">150,000đ</td>
-
-                      <td class="text-end fw-bold">300,000đ</td>
-                    </tr>
-                  </tbody>
-
-                  <tfoot>
-                    <tr>
-                      <td colspan="3" class="text-end fw-bold">
-                        Tổng dịch vụ:
-                      </td>
-
-                      <td class="text-end text-primary fw-bold">400,000đ</td>
-                    </tr>
-                  </tfoot>
-                </table>
-              </div>
-            </div>
-
-            <!-- PAYMENT -->
+            <!-- PAYMENT
             <div class="info-section">
               <div class="price-table">
                 <h5 class="fw-bold mb-4">
@@ -438,7 +456,7 @@
 
                     <span class="fs-3 fw-bold text-primary"> 1,400,000đ </span>
                   </div>
-                </div>
+                </div> -->
 
                 <!-- CANCEL -->
                 <form

@@ -8,7 +8,7 @@ import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 
-@Entity
+// @Entity
 @Table(name = "booking_room")
 public class BookingRoom {
     @Id

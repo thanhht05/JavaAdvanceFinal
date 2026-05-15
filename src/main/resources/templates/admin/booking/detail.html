@@ -495,7 +495,12 @@
                     Khách đã thanh toán đầy đủ
                   </div>
 
-                  <div class="display-6 fw-bold text-success">0đ</div>
+                  <div
+                    th:text="${#numbers.formatDecimal(invoice.roomTotal+serviceTotal, 0, 'COMMA', 0, 'POINT')} + 'đ'"
+                    class="display-6 fw-bold text-success"
+                  >
+                    0đ
+                  </div>
 
                   <small class="text-muted"> Đơn đặt phòng đã hoàn tất </small>
                 </div>

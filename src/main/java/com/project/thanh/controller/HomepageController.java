@@ -3,6 +3,7 @@ package com.project.thanh.controller;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
+import java.util.List;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,6 +29,7 @@ import com.project.thanh.dtos.BookingDTO;
 import com.project.thanh.enums.BookingStatus;
 import com.project.thanh.service.BookingDetailService;
 import com.project.thanh.service.BookingService;
+import com.project.thanh.service.BookingServiceService;
 import com.project.thanh.service.InvoiceDetailService;
 import com.project.thanh.service.InvoiceService;
 import com.project.thanh.service.RoomService;
@@ -56,6 +58,9 @@ public class HomepageController {
     private InvoiceService invoiceService;
     @Autowired
     private InvoiceDetailService invoiceDetailService;
+
+    @Autowired
+    private BookingServiceService bookingServiceService;
 
     @GetMapping("/")
     public String getHomepage(@RequestParam(required = false) String priceRange,
@@ -216,10 +221,16 @@ public class HomepageController {
         Booking booking = this.bookingService.getBookingById(id);
         long day = ChronoUnit.DAYS.between(booking.getCheckInDate(), booking.getCheckOutDate());
         boolean canCancel = this.bookingService.canCancel(booking);
+
+        BookingDetail detail = this.bookingDetailService.getBookingDetaibyId(id);
+        model.addAttribute("detail", detail);
         model.addAttribute("canCancel", canCancel);
         model.addAttribute("booking", booking);
         model.addAttribute("day", day);
-
+        List<com.project.thanh.domain.BookingService> bookingServices = this.bookingServiceService.getByBookingId(id);
+        Invoice invoice = this.invoiceService.getInvoiceByBookingId(id);
+        model.addAttribute("bookingServices", bookingServices);
+        model.addAttribute("invoice", invoice);
         return "user/booking-detail";
     }
 
