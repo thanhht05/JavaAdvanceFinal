@@ -265,28 +265,34 @@
               alt="Room 101"
             />
             <div>
-              <h4>Phòng số 101</h4>
-              <p>Suite - Tầng 1</p>
+              <h4 th:text="'Số phòng ' + ${room.roomNumber}">Phòng số 101</h4>
+              <h5 th:text="'Tâng ' + ${room.flor}">Suite - Tầng 1</h5>
+              <hh5 th:text="'Loại phòng: ' + ${room.roomType.name}">
+                Suite - Tầng 1
+              </hh5>
             </div>
           </div>
 
           <div class="price-details">
             <div class="price-row">
-              <span>Giá phòng (2 đêm)</span>
-              <span>400,000đ</span>
+              <span>Giá phòng</span>
+              <span th:text="${room.roomType.price}">400,000đ</span>
             </div>
+
             <div class="price-row">
-              <span>Phí dịch vụ</span>
-              <span>20,000đ</span>
-            </div>
-            <div class="price-row">
-              <span>Giảm giá (Voucher)</span>
-              <span class="discount">- 0đ</span>
+              <span>Số ngày</span>
+              <span th:text="${stayDays}" class="discount">- 0đ</span>
             </div>
             <hr />
             <div class="price-row total">
               <span>Tổng cộng</span>
-              <span class="total-amount">420,000đ</span>
+              <span
+                th:text="${
+     #numbers.formatDecimal(totalPrice, 0, 'COMMA', 0, 'POINT') + 'đ'
+    }"
+                class="total-amount"
+                >420,000đ</span
+              >
             </div>
           </div>
 

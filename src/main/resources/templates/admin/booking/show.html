@@ -263,12 +263,6 @@
                               name="bookingId"
                               th:value="${booking.id}"
                             />
-
-                            <button class="dropdown-item text-success">
-                              <i class="bi bi-check-circle me-2"></i>
-
-                              Xác nhận đơn
-                            </button>
                           </form>
                         </li>
 
@@ -289,24 +283,6 @@
                         </li>
 
                         <!-- CANCEL -->
-                        <li>
-                          <form
-                            method="post"
-                            th:action="@{/admin/bookings/cancel}"
-                          >
-                            <input
-                              type="hidden"
-                              name="bookingId"
-                              th:value="${booking.id}"
-                            />
-
-                            <button class="dropdown-item text-danger">
-                              <i class="bi bi-x-circle me-2"></i>
-
-                              Hủy đơn
-                            </button>
-                          </form>
-                        </li>
                       </ul>
                     </div>
                   </td>

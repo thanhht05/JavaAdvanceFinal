@@ -103,6 +103,7 @@ public class HomepageController {
 
     @PostMapping("/booking/confirm")
     public String handleBookingRoom(
+            Model model,
             @ModelAttribute("bookingDTO") BookingDTO bookingDTO,
             RedirectAttributes redirectAttributes) {
 
@@ -143,7 +144,10 @@ public class HomepageController {
 
         long pricePerDay = room.getRoomType().getPrice();
 
+        redirectAttributes.addAttribute("stayDays", days);
         long totalPrice = days * pricePerDay;
+        redirectAttributes.addAttribute("totalPrice", totalPrice);
+        redirectAttributes.addAttribute("roomId", room.getId());
 
         // =========================
         // BOOKING
@@ -213,7 +217,7 @@ public class HomepageController {
 
         invoiceDetailService.save(invoiceDetail);
 
-        return "redirect:/booking-history";
+        return "redirect:/payment";
     }
 
     @GetMapping("/booking-details/{id}")
