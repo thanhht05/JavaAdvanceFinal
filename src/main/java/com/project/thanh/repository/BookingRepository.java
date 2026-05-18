@@ -25,4 +25,8 @@ public interface BookingRepository extends JpaRepository<Booking, Long> {
 
     Page<Booking> findAll(Pageable pageable);
 
+    List<Booking> findByCustomerNameContainingIgnoreCaseOrPhoneContaining(
+            String customerName,
+            String phone);
+
 }

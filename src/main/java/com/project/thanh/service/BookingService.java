@@ -54,4 +54,8 @@ public class BookingService {
 
     }
 
+    public List<Booking> getbookingByCustomerOrPhone(String customerName, String phone) {
+        return this.bookingRepository.findByCustomerNameContainingIgnoreCaseOrPhoneContaining(customerName, phone);
+    }
+
 }

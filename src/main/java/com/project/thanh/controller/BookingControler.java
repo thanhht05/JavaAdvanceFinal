@@ -52,13 +52,36 @@ public class BookingControler {
     private ServiceService serviceService;
 
     @GetMapping("/admin/bookings")
-    public String handleGetBookingPage(Model model, @RequestParam(defaultValue = "1") int page) {
-        int size = 6;
-        Page<Booking> bookingPage = this.bookingService.getBookingPage(page, size);
-        model.addAttribute("curPage", page);
-        model.addAttribute("totalPages", bookingPage.getTotalPages());
+    public String handleGetBookingPage(
+            Model model,
+            @RequestParam(value = "keyword", required = false) String keyword,
+            @RequestParam(defaultValue = "1") int page) {
 
-        model.addAttribute("bookings", bookingPage.getContent());
+        int size = 6;
+
+        List<Booking> bookings;
+
+        if (keyword != null && !keyword.trim().isEmpty()) {
+
+            bookings = bookingService
+                    .getbookingByCustomerOrPhone(keyword, keyword);
+
+            model.addAttribute("totalPages", 1);
+            model.addAttribute("curPage", 1);
+
+        } else {
+
+            Page<Booking> bookingPage = bookingService.getBookingPage(page, size);
+
+            bookings = bookingPage.getContent();
+
+            model.addAttribute("curPage", page);
+            model.addAttribute("totalPages", bookingPage.getTotalPages());
+        }
+
+        model.addAttribute("bookings", bookings);
+        model.addAttribute("keyword", keyword);
+
         return "admin/booking/show";
     }
 
